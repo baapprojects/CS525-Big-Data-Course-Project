@@ -37,7 +37,7 @@ public class CreateDataSet
 				 randomLength=new Random().nextInt(_countryLength-1);
 				 nationality=_country[randomLength];
 				 
-				 coutryCode=new Random().nextInt(9)+1;
+				 coutryCode=new Random().nextInt(_countryLength-1)+1;
 
 				 ////generate random index for _hobby
 				 randomLength=new Random().nextInt(_hobbyLength-1);
