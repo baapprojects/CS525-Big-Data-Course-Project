@@ -16,15 +16,10 @@ public class query1
 
 		public void map(LongWritable key, Text value, OutputCollector<IntWritable,Text> output, Reporter reporter) throws IOException 
 		{
+			FileSplit fileSplit = (FileSplit)reporter.getInputSplit();
+      		String filename = fileSplit.getPath().getName();
 			String line = value.toString();
-		    String[] splits = line.split(",");
-		    int courtryCodeValue=Integer.parseInt(splits[3]);
-		    if(courtryCodeValue>=2 && courtryCodeValue<=6)
-		    {
-		        one.set(courtryCodeValue);
-		        word.set(line);
-		        output.collect(one, word);
-		    }	        			        
+		    output.collect(new Text(filename),new Text(line));      			        
 	    }
 	}
 
