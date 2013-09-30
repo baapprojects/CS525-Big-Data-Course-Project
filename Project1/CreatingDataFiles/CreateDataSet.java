@@ -153,8 +153,8 @@ public class CreateDataSet
 	{
 		// TODO Auto-generated method stub
 		CreateMyPage();
-		//CreateFriends();
-		//CreateAccessLog();
+		CreateFriends();
+		CreateAccessLog();
 
 		//printCountry();
 	}

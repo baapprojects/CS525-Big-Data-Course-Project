@@ -9,12 +9,12 @@ import org.apache.hadoop.util.*;
 
 public class query1 
 {
-	public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, IntWritable, Text> 
+	public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> 
 	{
-		private final static IntWritable one = new IntWritable(1);
+		//private final static IntWritable one = new IntWritable(1);
 		private Text word = new Text();
 
-		public void map(LongWritable key, Text value, OutputCollector<IntWritable,Text> output, Reporter reporter) throws IOException 
+		public void map(LongWritable key, Text value, OutputCollector<Text,Text> output, Reporter reporter) throws IOException 
 		{
 			FileSplit fileSplit = (FileSplit)reporter.getInputSplit();
       		String filename = fileSplit.getPath().getName();
@@ -28,7 +28,7 @@ public class query1
     {
 	    JobConf conf = new JobConf(query1.class);
 	    conf.setJobName("query1");
-	    conf.setOutputKeyClass(IntWritable.class);
+	    conf.setOutputKeyClass(Text.class);
 	    conf.setOutputValueClass(Text.class);
 
 	    conf.setMapperClass(Map.class);
