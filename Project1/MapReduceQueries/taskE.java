@@ -72,7 +72,7 @@ public class taskE
 				totalAccess += Integer.parseInt(values.next().toString());
 			}
 
-			output.collect(key,New Text(String.valueOf(totalAccess)+" , "+String.valueOf(distinctPageAmount)));	
+			output.collect(key,new Text(String.valueOf(totalAccess)+" , "+String.valueOf(distinctPageAmount)));	
 		}
 	}
 	public static void main(String[] args) throws Exception 
@@ -88,7 +88,7 @@ public class taskE
         conf.setReducerClass(getSumReduce.class);
         conf.setInputFormat(TextInputFormat.class);
         conf.setOutputFormat(TextOutputFormat.class);
-        FileInputFormat.setInputPaths(conf1, new Path("/hzhou/smallInput/accesslog.txt"));
+        FileInputFormat.setInputPaths(conf, new Path("/hzhou/smallInput/accesslog.txt"));
         FileOutputFormat.setOutputPath(conf, new Path("/hzhou/outputE/tmp"));
 		JobClient.runJob(conf);	
 
