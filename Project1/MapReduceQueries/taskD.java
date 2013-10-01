@@ -11,13 +11,13 @@ import org.apache.hadoop.mapred.lib.MultipleInputs;
 public class taskD
 {
 
-	public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text>
+	public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, IntWritable, Text>
 	{
 		//variables to process Customer details		
-		private  Text ID = new Text(0);
+		private  IntWritable ID = new IntWritable(0);
 		private String name;
 
-		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter)throws IOException
+		public void map(LongWritable key, Text value, OutputCollector<IntWritable, Text> output, Reporter reporter)throws IOException
 		{
 			String line = value.toString();
 			String[] splits = line.split(",");
@@ -43,11 +43,11 @@ public class taskD
 	}
 
 
-	public static class Reduce extends MapReduceBase implements Reducer<Text, Text, Text, Text>
+	public static class Reduce extends MapReduceBase implements Reducer<IntWritable, Text, Text, IntWritable>
 	{
 		//variebles to aid the join process
 		
-		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter)throws IOException
+		public void reduce(IntWritable key, Iterator<Text> values, OutputCollector<Text, IntWritable> output, Reporter reporter)throws IOException
 		{
 			String name = "ERROR NAME";
 			int countToBeFriendOfOthers = 0;  
@@ -67,7 +67,7 @@ public class taskD
 				}
 			}
 			
-			output.collect(new Text(name),new Text(countToBeFriendOfOthers));	
+			output.collect(new Text(name),new IntWritable(countToBeFriendOfOthers));	
 		}
 	}
 
@@ -76,7 +76,7 @@ public class taskD
 		JobConf conf = new JobConf(taskD.class);
 		conf.setJobName("taskD");
 
-		conf.setOutputKeyClass(Text.class);
+		conf.setOutputKeyClass(IntWritable.class);
 		conf.setOutputValueClass(Text.class);
 
 		conf.setMapperClass(Map.class);
