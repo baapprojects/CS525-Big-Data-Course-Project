@@ -49,8 +49,8 @@ public class taskD
 		
 		public void reduce(IntWritable key, Iterator<Text> values, OutputCollector<Text, IntWritable> output, Reporter reporter)throws IOException
 		{
-			private String name;
-			private int countToBeFriendOfOthers = 0;  
+			String name = "ERROR NAME";
+			int countToBeFriendOfOthers = 0;  
 
 			while (values.hasNext())
 			{
@@ -67,7 +67,7 @@ public class taskD
 				}
 			}
 			
-			output.collect(new Text(name),countToBeFriendOfOthers);	
+			output.collect(new Text(name),new IntWritable(countToBeFriendOfOthers));	
 		}
 	}
 
