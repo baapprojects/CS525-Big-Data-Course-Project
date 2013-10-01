@@ -42,11 +42,33 @@ public class taskD
 		}
 	}
 
+	public static class Combiner extends MapReduceBase implements Reducer<IntWritable, Text, IntWritable, Text>
+	{
+		public void reduce(IntWritable key, Iterator<Text> values, OutputCollector<IntWritable, Text> output, Reporter reporter)throws IOException
+		{
+			int countToBeFriendOfOthers = 0;  
+			String name = null;
+			while (values.hasNext())
+			{
+				String line = values.next().toString();
+
+				//if data from mypage.txt
+				if(line.length() > 5)
+				{
+					name = line;
+					output.collect(key,new Text(name));	//This line cannot be moved outside while block, and I don't know why
+				}
+				else
+				{
+					countToBeFriendOfOthers++;//= countToBeFriendOfOthers + Integer.parseInt(line);
+				}
+			}
+			output.collect(key,new Text(String.valueOf(countToBeFriendOfOthers)));	
+		}
+	}
 
 	public static class Reduce extends MapReduceBase implements Reducer<IntWritable, Text, Text, IntWritable>
-	{
-		//variebles to aid the join process
-		
+	{		
 		public void reduce(IntWritable key, Iterator<Text> values, OutputCollector<Text, IntWritable> output, Reporter reporter)throws IOException
 		{
 			String name = "ERROR NAME";
@@ -57,13 +79,13 @@ public class taskD
 				String line = values.next().toString();
 
 				//if data from mypage.txt
-				if(line.length() > 2)
+				if(line.length() > 9)
 				{
 					name = line;
 				}
 				else
 				{
-					countToBeFriendOfOthers++;
+					countToBeFriendOfOthers = countToBeFriendOfOthers + Integer.parseInt(line);
 				}
 			}
 			
@@ -80,14 +102,14 @@ public class taskD
 		conf.setOutputValueClass(Text.class);
 
 		conf.setMapperClass(Map.class);
-		//conf.setCombinerClass(Reduce.class);
+		conf.setCombinerClass(Combiner.class);
 		conf.setReducerClass(Reduce.class);
 
 		conf.setInputFormat(TextInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
 
-		FileInputFormat.addInputPath(conf, new Path("/hzhou/input/mypage.txt"));
-		FileInputFormat.addInputPath(conf, new Path("/hzhou/input/friends.txt"));
+		FileInputFormat.addInputPath(conf, new Path("/hzhou/smallInput/mypage.txt"));
+		FileInputFormat.addInputPath(conf, new Path("/hzhou/smallInput/friends.txt"));
 		FileOutputFormat.setOutputPath(conf, new Path(args[0]));
 
 		JobClient.runJob(conf);
