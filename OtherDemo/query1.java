@@ -41,7 +41,8 @@ public class query1
 
 		//The input is a directory [So, you'd know not just file can be mapper input, but directory]
 		//Before this code running, you should put more than one file in the directory "/tmp/" in HDFS
-		FileInputFormat.setInputPaths(conf, new Path("/tmp/"));
+		FileInputFormat.addInputPath(conf, new Path("/tmp/1.txt"));
+		FileInputFormat.addInputPath(conf, new Path("/tmp/2.txt"));
 		FileOutputFormat.setOutputPath(conf, new Path("/tmp/output"));
 
 		JobClient.runJob(conf);
