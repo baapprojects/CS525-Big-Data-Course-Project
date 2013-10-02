@@ -24,7 +24,7 @@ public class taskE
 		}
 	}
 	
-
+	
 	public static class getSumReduce extends MapReduceBase implements Reducer<Text, Text, Text, Text>
 	{
 
@@ -33,17 +33,24 @@ public class taskE
 			int sum = 0;
 
 			String line = key.toString();
+			
 			String[] splits = line.split(",");
 			String personID = splits[0];
 
 			while (values.hasNext())
 			{
+				String noSenseHere = values.next().toString();
+
 				sum++;
 			}
+
 			output.collect(new Text(),new Text(personID+","+String.valueOf(sum)));	
+			//output.collect(new Text(),new Text(String.valueOf(sum)));	
+			//output.collect(new Text(),new Text(line));
 		}
 	}
-
+	
+	
 	public static class newKeyMap extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text>
 	{	
 		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException
@@ -75,6 +82,8 @@ public class taskE
 			output.collect(key,new Text(String.valueOf(totalAccess)+" , "+String.valueOf(distinctPageAmount)));	
 		}
 	}
+	
+
 	public static void main(String[] args) throws Exception 
 	{
         //JOB1
@@ -93,6 +102,7 @@ public class taskE
 		JobClient.runJob(conf);	
 
 		//JOB2
+		
 	    JobConf conf1 = new JobConf(taskE.class);
         conf1.setJobName("taskE-2");
 
@@ -106,6 +116,7 @@ public class taskE
 		FileInputFormat.setInputPaths(conf1, new Path("/hzhou/outputE/tmp"));
 	    FileOutputFormat.setOutputPath(conf1, new Path("/hzhou/outputE/E1"));
 		JobClient.runJob(conf1);
+		
 
     }
 }
