@@ -13,12 +13,12 @@ public class taskF
 
 	public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, IntWritable, Text>
 	{
-		//variables to process Customer details		
-		private IntWritable ID = new IntWritable(0);
-		private String name;
-
 		public void map(LongWritable key, Text value, OutputCollector<IntWritable, Text> output, Reporter reporter)throws IOException
 		{
+			String tag = null;
+			String keyID = null;
+			String refID = null;
+
 			String line = value.toString();
 			String[] splits = line.split(",");
 			//Get FileName from reporter
@@ -27,17 +27,21 @@ public class taskF
 
 			if(filename.contains("friends"))
 			{
-				//Deal with mypage.txt, get ID and name
-				ID.set(Integer.parseInt(splits[0]));
-				name = splits[1];
-				output.collect(ID,new Text(name));
-			}
+				tag = "F";
+				keyID = splits[1];
+				refID = splits[2]; //friend ID
+			} 
 			else
 			{
-				//Deal with friend.txt, get MyFriend is fine
-				ID.set(Integer.parseInt(splits[2]));
-				output.collect(ID,new Text("1"));
-			}
+				tag = "A";
+				keyID = splits[2];
+				refID = splits[1]; //by Who
+			} 
+
+
+			ID.set(Integer.parseInt(splits[0]));
+			name = splits[1];
+			output.collect(new Text(keyID),new Text(tag +","+ refID));
 			
 		}
 	}
