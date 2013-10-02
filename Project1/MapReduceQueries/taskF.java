@@ -43,29 +43,47 @@ public class taskF
 		}
 	}
 
-	public static class Reduce extends MapReduceBase implements Reducer<Text, Text, Text, IntWritable>
+	public static class Reduce extends MapReduceBase implements Reducer<Text, Text, Text, Text>
 	{
-		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, IntWritable> output, Reporter reporter)throws IOException
+		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter)throws IOException
 		{
-			String name = "ERROR NAME";
-			int countToBeFriendOfOthers = 0;  
+			Set<String> setF = new HashSet<String>();
+			Set<String> setA = new HashSet<String>();
 
 			while (values.hasNext())
 			{
 				String line = values.next().toString();
-
-				//if data from mypage.txt
-				if(line.length() > 9)
+				String[] splits = line.split(",");
+				if(splits[0].contains("F"))
 				{
-					name = line;
+					setF.add(splits[1]);
 				}
 				else
 				{
-					countToBeFriendOfOthers = countToBeFriendOfOthers + Integer.parseInt(line);
+					setA.add(splits[1]);
+				}
+				
+			}
+			//Now I have get two sets: setF & setA
+			for(String setFStr : setF)
+			{
+				boolean isElementFoundInSetA = false;
+				for(String setAStr : setA)
+				{
+					if(setFStr.equals(setAStr))
+					{
+						isElementFoundInSetA = true;
+						break;
+					}
+				}
+
+				if(isElementFoundInSetA == false)
+				{
+					output.collect(key,new Text(setFStr));	
 				}
 			}
+
 			
-			output.collect(new Text(name),new IntWritable(countToBeFriendOfOthers));	
 		}
 	}
 
@@ -79,7 +97,7 @@ public class taskF
 
 		conf.setMapperClass(Map.class);
 		//conf.setCombinerClass(Combiner.class);
-		//conf.setReducerClass(Reduce.class);
+		conf.setReducerClass(Reduce.class);
 
 		conf.setInputFormat(TextInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
