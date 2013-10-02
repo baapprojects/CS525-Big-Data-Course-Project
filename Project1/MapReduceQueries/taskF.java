@@ -11,9 +11,9 @@ import org.apache.hadoop.mapred.lib.MultipleInputs;
 public class taskF
 {
 
-	public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, IntWritable, Text>
+	public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text>
 	{
-		public void map(LongWritable key, Text value, OutputCollector<IntWritable, Text> output, Reporter reporter)throws IOException
+		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter)throws IOException
 		{
 			String tag = null;
 			String keyID = null;
@@ -38,42 +38,14 @@ public class taskF
 				refID = splits[1]; //by Who
 			} 
 
-
-			ID.set(Integer.parseInt(splits[0]));
-			name = splits[1];
 			output.collect(new Text(keyID),new Text(tag +","+ refID));
 			
 		}
 	}
 
-	public static class Combiner extends MapReduceBase implements Reducer<IntWritable, Text, IntWritable, Text>
+	public static class Reduce extends MapReduceBase implements Reducer<Text, Text, Text, IntWritable>
 	{
-		public void reduce(IntWritable key, Iterator<Text> values, OutputCollector<IntWritable, Text> output, Reporter reporter)throws IOException
-		{
-			int countToBeFriendOfOthers = 0;  
-			String name = null;
-			while (values.hasNext())
-			{
-				String line = values.next().toString();
-
-				//if data from mypage.txt
-				if(line.length() > 5)
-				{
-					name = line;
-					output.collect(key,new Text(name));	//This line cannot be moved outside while block, and I don't know why
-				}
-				else
-				{
-					countToBeFriendOfOthers++;//= countToBeFriendOfOthers + Integer.parseInt(line);
-				}
-			}
-			output.collect(key,new Text(String.valueOf(countToBeFriendOfOthers)));	
-		}
-	}
-
-	public static class Reduce extends MapReduceBase implements Reducer<IntWritable, Text, Text, IntWritable>
-	{		
-		public void reduce(IntWritable key, Iterator<Text> values, OutputCollector<Text, IntWritable> output, Reporter reporter)throws IOException
+		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, IntWritable> output, Reporter reporter)throws IOException
 		{
 			String name = "ERROR NAME";
 			int countToBeFriendOfOthers = 0;  
@@ -102,19 +74,19 @@ public class taskF
 		JobConf conf = new JobConf(taskF.class);
 		conf.setJobName("taskF");
 
-		conf.setOutputKeyClass(IntWritable.class);
+		conf.setOutputKeyClass(Text.class);
 		conf.setOutputValueClass(Text.class);
 
 		conf.setMapperClass(Map.class);
-		conf.setCombinerClass(Combiner.class);
-		conf.setReducerClass(Reduce.class);
+		//conf.setCombinerClass(Combiner.class);
+		//conf.setReducerClass(Reduce.class);
 
 		conf.setInputFormat(TextInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
 
 		FileInputFormat.addInputPath(conf, new Path("/hzhou/smallInput/accesslog.txt"));
 		FileInputFormat.addInputPath(conf, new Path("/hzhou/smallInput/friends.txt"));
-		FileOutputFormat.setOutputPath(conf, new Path(args[0]));
+		FileOutputFormat.setOutputPath(conf, new Path("/hzhou/outputF/F1"));
 
 		JobClient.runJob(conf);
     }
