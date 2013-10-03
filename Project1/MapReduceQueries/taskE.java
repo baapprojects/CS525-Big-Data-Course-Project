@@ -86,37 +86,37 @@ public class taskE
 
 	public static void main(String[] args) throws Exception 
 	{
-        //JOB1
+		//JOB1
 		JobConf conf = new JobConf(taskE.class);
-        conf.setJobName("taskE-1");
+		conf.setJobName("taskE-1");
 
-        conf.setOutputKeyClass(Text.class);
-        conf.setOutputValueClass(Text.class);
-        conf.setMapperClass(initMap.class);
-        //conf.setCombinerClass(Reduce.class);
-        conf.setReducerClass(getSumReduce.class);
-        conf.setInputFormat(TextInputFormat.class);
-        conf.setOutputFormat(TextOutputFormat.class);
-        FileInputFormat.setInputPaths(conf, new Path("/hzhou/smallInput/accesslog.txt"));
-        FileOutputFormat.setOutputPath(conf, new Path("/hzhou/outputE/tmp"));
+		conf.setOutputKeyClass(Text.class);
+		conf.setOutputValueClass(Text.class);
+		conf.setMapperClass(initMap.class);
+		//conf.setCombinerClass(Reduce.class);
+		conf.setReducerClass(getSumReduce.class);
+		conf.setInputFormat(TextInputFormat.class);
+		conf.setOutputFormat(TextOutputFormat.class);
+		FileInputFormat.setInputPaths(conf, new Path("/hzhou/smallInput/accesslog.txt"));
+		FileOutputFormat.setOutputPath(conf, new Path("/hzhou/outputE/tmp"));
 		JobClient.runJob(conf);	
 
 		//JOB2
 		
-	    JobConf conf1 = new JobConf(taskE.class);
-        conf1.setJobName("taskE-2");
+		JobConf conf1 = new JobConf(taskE.class);
+		conf1.setJobName("taskE-2");
 
-        conf1.setOutputKeyClass(Text.class);
-        conf1.setOutputValueClass(Text.class);
+		conf1.setOutputKeyClass(Text.class);
+		conf1.setOutputValueClass(Text.class);
 		conf1.setMapperClass(newKeyMap.class);
 		conf1.setReducerClass(outPutReduce.class);
-        conf1.setInputFormat(TextInputFormat.class);
-        conf1.setOutputFormat(TextOutputFormat.class);
+		conf1.setInputFormat(TextInputFormat.class);
+		conf1.setOutputFormat(TextOutputFormat.class);
 
 		FileInputFormat.setInputPaths(conf1, new Path("/hzhou/outputE/tmp"));
-	    FileOutputFormat.setOutputPath(conf1, new Path("/hzhou/outputE/E1"));
+		FileOutputFormat.setOutputPath(conf1, new Path("/hzhou/outputE/E1"));
 		JobClient.runJob(conf1);
 		
 
-    }
+	}
 }
