@@ -8,6 +8,7 @@ import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.util.*;
 import org.apache.hadoop.mapred.lib.MultipleInputs;
 
+// Misson of Task F: Get the person who does not care his friends so much
 public class taskF
 {
 
@@ -54,17 +55,22 @@ public class taskF
 			{
 				String line = values.next().toString();
 				String[] splits = line.split(",");
+
+				// determine the source of this record
 				if(splits[0].contains("F"))
 				{
+					// record comes from friends.txt, then add this to setF
 					setF.add(splits[1]);
 				}
 				else
 				{
+					// record comes from accesslog.txt, then add this to setA
 					setA.add(splits[1]);
 				}
 				
 			}
-			//Now I have get two sets: setF & setA
+			// Now I have get two sets: setF & setA
+			// just output the records which are in setF, but not in setA
 			for(String setFStr : setF)
 			{
 				boolean isElementFoundInSetA = false;
@@ -96,7 +102,6 @@ public class taskF
 		conf.setOutputValueClass(Text.class);
 
 		conf.setMapperClass(Map.class);
-		//conf.setCombinerClass(Combiner.class);
 		conf.setReducerClass(Reduce.class);
 
 		conf.setInputFormat(TextInputFormat.class);
