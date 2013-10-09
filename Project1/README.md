@@ -11,6 +11,6 @@
    **Combiner** output: for accesslog table -> `<personalID, 'localAccessCount'>`; for mypage table -> `<personalID, name>`    
    **Reducer** output: `<name, 'globalAccessCount'>`
 3. ScreenShot with Combiner:
-   ![ScreenShot with Combiner](Images/taskDWithCombiner.PNG, "ScreenShot with Combiner")
+   ![ScreenShot with Combiner](Images/taskDWithCombiner.PNG "ScreenShot with Combiner")
 
 4. wqwq
