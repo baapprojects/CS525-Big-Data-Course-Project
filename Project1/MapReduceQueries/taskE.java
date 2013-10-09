@@ -8,6 +8,10 @@ import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.util.*;
 import org.apache.hadoop.mapred.lib.MultipleInputs;
 
+
+//this is a task consists two map-reducer jobs
+//first job:
+//second job:
 public class taskE
 {
 	public static class initMap extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text>
@@ -18,8 +22,8 @@ public class taskE
 			String line = value.toString();
 			String[] splits = line.split(",");
 
-			// key : personID (byWho)
-			// value : pageID
+			// key : personID (byWho) + pageID
+			// value : null
 			output.collect(new Text(splits[1]+","+splits[2]),new Text());
 		}
 	}

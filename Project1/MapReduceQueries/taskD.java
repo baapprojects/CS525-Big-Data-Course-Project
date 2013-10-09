@@ -59,11 +59,13 @@ public class taskD
 				//if data from mypage.txt, then we get the name attribute (as the lenght of name is no shorter than 10)
 				if(line.length() > 5)
 				{
+					// if the length of value is longer than 5, it means that the value is the name attribute
 					name = line;
 					output.collect(key,new Text(name));	//This line cannot be moved outside while block
 				}
 				else
 				{
+					//if length of value is shotrter than 5, it means some guys add this personID as a friend
 					//if records are from myFriend.txt, just add the countToBeFriendOfOthers by 1
 					countToBeFriendOfOthers++;
 				}
@@ -79,17 +81,20 @@ public class taskD
 			String name = "ERROR NAME";
 			int countToBeFriendOfOthers = 0;  
 
+			//it seems that I always lost one record in the reducer side, I think I do something wrong here in while loop
 			while (values.hasNext())
 			{
 				String line = values.next().toString();
 
 				//if data from mypage.txt
+				//get name, becuase we know the length of name is between 10 and 20
 				if(line.length() > 9)
 				{
 					name = line;
 				}
 				else
 				{
+					//if the value field is not name attribute, it must be the count
 					countToBeFriendOfOthers = countToBeFriendOfOthers + Integer.parseInt(line);
 				}
 			}
