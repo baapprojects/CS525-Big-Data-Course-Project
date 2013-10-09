@@ -107,8 +107,8 @@ public class taskF
 		conf.setInputFormat(TextInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
 
-		FileInputFormat.addInputPath(conf, new Path("/hzhou/smallInput/accesslog.txt"));
-		FileInputFormat.addInputPath(conf, new Path("/hzhou/smallInput/friends.txt"));
+		FileInputFormat.addInputPath(conf, new Path("/hzhou/input/accesslog.txt"));
+		FileInputFormat.addInputPath(conf, new Path("/hzhou/input/friends.txt"));
 		FileOutputFormat.setOutputPath(conf, new Path("/hzhou/outputF/F1"));
 
 		JobClient.runJob(conf);
