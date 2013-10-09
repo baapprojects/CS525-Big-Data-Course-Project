@@ -20,10 +20,11 @@ Country Name, # of users
 
 */
 
-
-
 public class taskB
 {
+	/*
+	the mapper outputs the country name and a count
+	*/
 
 	public static class Map extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable>
 	{
@@ -33,12 +34,16 @@ public class taskB
 	      public void map(LongWritable key, Text value, OutputCollector<Text,IntWritable> output, Reporter reporter) throws IOException {
 	        String line = value.toString();
 	        String[] splits = line.split(",");
+					// get country name
 	        country.set(splits[2]);
        		output.collect(country, one);
 	      }
 	}
 
-
+	/*
+	the reducer is aggregating the total count for a country
+	to a variable called sum and outputs country name and total users.
+	*/
 	public static class Reduce extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable>
 	{		
 		public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter)throws IOException
@@ -48,7 +53,6 @@ public class taskB
 				sum += values.next().get();
 			}
 			output.collect(key, new IntWritable(sum));
-			
 		}
 	}
 

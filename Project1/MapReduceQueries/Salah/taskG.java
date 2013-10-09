@@ -20,7 +20,6 @@ directory2: output directory
 Output:
 memberID, Member Name, first access time, last access time
 
-
 */
 
 
@@ -31,7 +30,6 @@ public class taskG{
 	outputs: ID , M, Name
 	M is a tag to identify at the reducer that the input came from mypage.txt
 	*/
-
 	public static class MypageMap extends MapReduceBase implements Mapper<LongWritable, Text, IntWritable, Text>{
     
 		private  IntWritable myID = new IntWritable(0);
@@ -51,7 +49,6 @@ public class taskG{
 	outputs: ID , A, AccessTime
 	A is a tag to identify at the reducer that the input came from accesslog.txt
 	*/
-	
 	public static class AccessLogMap extends MapReduceBase implements Mapper<LongWritable, Text, IntWritable, Text>{
 		//variables to process Transaction details	
 		private IntWritable myID = new IntWritable(0);
@@ -107,11 +104,16 @@ public class taskG{
 			( 10*24*60= 14400 minutes, assuming that each
 			each access time unit is a minute).
 			if the difference of last access time and first access 
-			time is within threshold time, then they used facebook 
+			time is within threshold time of 10 days and the difference
+			between current time and last access timme is greater than 
+			the threshold time of 10 days, then they used facebook 
 			only for the initial threshold period 
-			and never accessed again.
+			and never accessed again. the diffeence between current time
+			and last access time is taken into consideration because we 
+			should not judge people who started using facebook in last 10 days.
 			*/
-			if( (Integer.parseInt(maxTime) - Integer.parseInt(minTime)) <= 14400 )
+			if( (Integer.parseInt(maxTime) - Integer.parseInt(minTime)) <= 14400 
+					&& 1000000-Integer.parseInt(maxTime) > 14400 )
 			{
 				Text text = new Text();
 				text.set(name + "," + minTime + "," + maxTime);
@@ -127,9 +129,6 @@ public class taskG{
       conf.setOutputKeyClass(IntWritable.class);
       conf.setOutputValueClass(Text.class);
 
-      //conf.setMapperClass(MypageMap.class);
-			//conf.setMapperClass(AccessLogMap.class);
-      //conf.setCombinerClass(Reduce.class);
       conf.setReducerClass(Reduce.class);
 
       conf.setInputFormat(TextInputFormat.class);

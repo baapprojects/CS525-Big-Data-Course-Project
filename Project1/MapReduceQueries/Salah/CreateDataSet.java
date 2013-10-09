@@ -5,9 +5,9 @@ public class CreateDataSet
 {
 
 	// define dataset size here
-	static final int myPageSize=50000; //myPageSize=50000;
-	static final int friendsSize=5000000; //friendsSize=5000000;
-	static final int accessLogSize=10000000; //accessLogSize=10000000;
+	static final int myPageSize=500; //myPageSize=50000;
+	static final int friendsSize=5000; //friendsSize=5000000;
+	static final int accessLogSize=10000; //accessLogSize=10000000;
 
 
 	//List of Country, amount 243
@@ -183,8 +183,8 @@ public class CreateDataSet
 	public static void main(String[] args) 
 	{
 		// TODO Auto-generated method stub
-		//CreateMyPage();
-		//CreateFriends();
+		CreateMyPage();
+		CreateFriends();
 		CreateAccessLog();
 
 	}

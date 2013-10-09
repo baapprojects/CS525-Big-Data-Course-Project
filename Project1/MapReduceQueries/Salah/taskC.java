@@ -20,12 +20,13 @@ directory2: output directory
 Output:
 top 10 pages'
 PageID, Access count
-
 */
 
 public class taskC
 {
-
+	/*
+	The mapper outputs what page was accessed and a count
+	*/
 	public static class Map extends Mapper<LongWritable, Text, IntWritable, IntWritable>
 	{
 		private final static IntWritable one = new IntWritable(1);
@@ -42,7 +43,11 @@ public class taskC
 		}
 	}
 
-
+	/*
+	the reducer aggregates the count and stores that if that total count is 
+	one of the top 10 counts. Tow integer arrage tops and topHits are used here 
+	to store the page id and hit count respectively.
+	*/
 	public static class Reduce extends Reducer<IntWritable, IntWritable, IntWritable, IntWritable>
 	{		
 		int topK = 10;
@@ -70,7 +75,12 @@ public class taskC
 				sum += value.get();
 			}
 			
-			// next 7 lines are for sorting the top 10 elements
+			/* next 7 lines are for sorting the top 10 elements
+			 this sorting will be faster than any other sorting like 
+			 hash table or hash tree based sorting, because it is only
+			 comparing 10 elements and the average case comparison is
+			 5 * #of users.
+			*/
       int k; 
 			for (k = topK - 1; k >= 0; k--)
       if (sum > topHits[k])
@@ -78,7 +88,6 @@ public class taskC
       else 
 				break;
       if (k < topK - 1){ tops[k + 1] = key.get(); topHits[k + 1] = sum; }
-			
 		}
 
 		// cleanup method outputs the top 10 pageIDs and their counts
@@ -97,7 +106,7 @@ public class taskC
     job.setJobName("taskC");
     FileInputFormat.addInputPath(job, new Path(args[0] + "/accesslog.txt"));
     FileOutputFormat.setOutputPath(job, new Path(args[1]));
-    job.setNumReduceTasks(1);
+    job.setNumReduceTasks(1); // only using one reducer
     job.setMapperClass(Map.class);
     job.setReducerClass(Reduce.class);
     job.setOutputKeyClass(IntWritable.class);
