@@ -32,12 +32,8 @@
 
 ###Task F:
 1. One map-reduce job with combiner    
-2. **Mapper** output: for accesslog table -> `<personalID, '1'>`; for mypage table -> `<personalID, name>`     
-   **Combiner** output: for accesslog table -> `<personalID, 'localAccessCount'>`; for mypage table -> `<personalID, name>`    
-   **Reducer** output: `<name, 'globalAccessCount'>`
-3. ScreenShot with Combiner:      
-   ![ScreenShot with Combiner](Images/taskDWithCombiner.PNG "ScreenShot with Combiner")
+2. **Mapper** output: for friends table -> `<personalID, 'F'+myFriend>`; for accesslog table -> `<Whatpage, 'A'+ByWho>`       
+   **Reducer** output: `<personalID, 'FriendIDWhoNeverAccessMyPage'>`    
+3. ScreenShot:      
+   ![taskF](Images/taskF.PNG "taskF")
 
-4. ScreenShot without Combiner:      
-   ![ScreenShot with Combiner](Images/taskDWithoutCombiner.PNG "ScreenShot with Combiner")
-5. **Conclusion**: Combiner makes the program faster, as it reduce the workload of reducers.
