@@ -37,3 +37,12 @@
 3. ScreenShot:      
    ![taskF](Images/taskF.PNG "taskF")
 
+##Comparison:
+###Task D -> Map-Reduce VS Pig
+1. *Job Count*:   
+   In **map-reduce**, everything can be done in one job.    
+   In **Pig**, the same work needs two jobs.     
+   ![PigD](Images/pigDJobCount.PNG "PigD")
+2. *CPU Time*:
+   ![CPUTimeForTaskD](Images/CPUTimeForTaskD.png "CPUTimeForTaskD")
+3. **Conclusion**: Pig is high language for Hadoop, and it is not as efficient as Map-reduce in Java. 
