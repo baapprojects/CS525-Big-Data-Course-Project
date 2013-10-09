@@ -1,6 +1,6 @@
 PA = load '/hzhou/input/mypage.txt' USING PigStorage(',') as (ID, Name, Nationality, CountryCode, Hobby);
 PB = foreach PA generate ID, Name;
-FA = load '/hzhou/input/friends.txt' USING PigStorage(',') as (FriendRel, PersonID, MyFriend, DaFAofFriendship, Description);
+FA = load '/hzhou/input/friends.txt' USING PigStorage(',') as (FriendRel, PersonID, MyFriend, DateofFriendship, Description);
 FB = foreach FA generate MyFriend;
 FC = group FB by MyFriend;
 FD = foreach FC generate group as MyFriend, COUNT(FB) as Count;
