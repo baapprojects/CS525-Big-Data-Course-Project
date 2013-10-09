@@ -10,8 +10,9 @@ import org.apache.hadoop.mapred.lib.MultipleInputs;
 
 
 //this is a task consists two map-reducer jobs
-//first job:
-//second job:
+//first job: get the access count for different distinct pages of each person
+//second job: get the count of how many distinct page accessed by each person, + the total accesses to fb pages
+
 public class taskE
 {
 	public static class initMap extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text>
@@ -49,8 +50,7 @@ public class taskE
 			}
 
 			output.collect(new Text(),new Text(personID+","+String.valueOf(sum)));	
-			//output.collect(new Text(),new Text(String.valueOf(sum)));	
-			//output.collect(new Text(),new Text(line));
+
 		}
 	}
 	
@@ -64,7 +64,7 @@ public class taskE
 			String[] splits = line.split(",");
 
 			//key -> personID
-			//Valeu -> access amount for distinct page     //Valeu -> distinct pageID : access amount for this page
+			//Valeu -> access amount for distinct page    
 			output.collect(new Text(splits[0].trim()),new Text(splits[1]));
 		}
 	}
