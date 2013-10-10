@@ -5,6 +5,13 @@
 **Hao**(know something about Hadoop): Task C, D, F, Pig A, B, D (a different version of task C)
 
 ##Task Description:
+###Task A:
+1.	We can use only one map for the function    
+2.	**Mapper** output: `<ID,name+hobby>`
+Because we just need to list the name and hobby of a certain nationality, we don’t need a combiner to do extra job. It’s better that we make the task simple.
+3.	ScreenShot without reducer:      
+![taskA](Images/image001.PNG "taskA")
+
 ###Task D:
 1. One map-reduce job with combiner    
 2. **Mapper** output: for accesslog table -> `<personalID, '1'>`; for mypage table -> `<personalID, name>`     
@@ -37,6 +44,22 @@
 3. ScreenShot:      
    ![taskF](Images/taskF.PNG "taskF")
 
+###Task H:
+**TaskH describe 1:**
+We can check the number of a certain person’s friends, and the visiting number of it. It’s a problem that we connect all the three forms together using the ID and return information in each of the forms. The connection of each forms is the personal ID.     
+1.	We use a map and a reducer for the function       
+2.	Mapper output: for mypage table ->`<ID,name >`;for friends table`<ID,”F”>`;for accesslog table->`<ID,”A”>`;     
+3.	Reducer output:`<name,countToBeFriendOfOthers>`    
+4.	ScreenShot with reducer:       
+ ![taskH](Images/image003.PNG "taskH")
+
+**TaskI describe 2:**
+We can check the number of a certain nationality, how many person are in that nationality, we can use map to find the nationality and use reduce to count for each nationality. Then we can get how many people are in the facebook with the same nationality.     
+1.	We use a map and a reducer for the function    
+2.	Mapper output: for mypage table ->`< nationality,’1’ >`;    
+3.	 Reducer output:`<key,countToBenationality>`;    
+4.	ScreenShot with reducer:      
+ ![taskH](Images/image005.PNG "taskH")
 ##Comparison:
 ###Task D -> Map-Reduce VS Pig
 1. *Job Count*:   
