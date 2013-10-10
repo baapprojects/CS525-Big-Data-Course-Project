@@ -2,7 +2,7 @@
 ##Workload assignment:    
 **Ying Wang**:Task A, H(Two version of Task H)    
 **Salah** : Task B, C, G (Task H)   
-**Hao**(know something about Hadoop): Task C, D, F, Pig A, B, D (a different version of task C)
+**Hao**(know something about Hadoop): Task  D, E, F, Pig A, B, D (also a different version of task C)
 
 ##Task Description:
 ###Task A:
