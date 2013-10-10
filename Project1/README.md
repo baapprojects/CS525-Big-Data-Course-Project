@@ -10,7 +10,7 @@
 2.	**Mapper** output: `<ID,name+hobby>`
 Because we just need to list the name and hobby of a certain nationality, we don’t need a combiner to do extra job. It’s better that we make the task simple.
 3.	ScreenShot without reducer:      
-![taskA](Images/image001.PNG "taskA")
+![taskA](Images/image001.png "taskA")
 
 ###Task D:
 1. One map-reduce job with combiner    
@@ -51,7 +51,7 @@ We can check the number of a certain person’s friends, and the visiting number
 2.	Mapper output: for mypage table ->`<ID,name >`;for friends table`<ID,”F”>`;for accesslog table->`<ID,”A”>`;     
 3.	Reducer output:`<name,countToBeFriendOfOthers>`    
 4.	ScreenShot with reducer:       
- ![taskH](Images/image003.PNG "taskH")
+ ![taskH](Images/image003.png "taskH")
 
 **TaskI describe 2:**
 We can check the number of a certain nationality, how many person are in that nationality, we can use map to find the nationality and use reduce to count for each nationality. Then we can get how many people are in the facebook with the same nationality.     
@@ -59,7 +59,7 @@ We can check the number of a certain nationality, how many person are in that na
 2.	Mapper output: for mypage table ->`< nationality,’1’ >`;    
 3.	 Reducer output:`<key,countToBenationality>`;    
 4.	ScreenShot with reducer:      
- ![taskH](Images/image005.PNG "taskH")
+ ![taskH](Images/image005.png "taskH")
 ##Comparison:
 ###Task D -> Map-Reduce VS Pig
 1. *Job Count*:   
