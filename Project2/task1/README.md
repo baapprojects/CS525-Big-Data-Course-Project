@@ -4,7 +4,7 @@
 
 ##How to run this task
 ###Step 1. Generate the DataSet
-1. Compile & Run `DataSet.java` in `DataSetGenerator`
+1. Compile & Run [DataSet.java](https://github.com/zhouhao/CS525-Big-Data-Course-Project/blob/master/Project2/task1/DataSetGenerator/DataSet.java)
 2. Now, you get a file list of 119848 tweets(one tweet one file) [it seems too many].   
 3. A tricky here: as there are too many files in that folder, it is hard to open it. But before we upload the folder to HDFS, we must remove the txt, and source files from it.      
 ![mv](../../ScreenShots/move.png)
@@ -56,5 +56,5 @@
 
 ------
 Error when uploading files to HDFS:    
-![error](../../ScreenShots/error.png "error")
-https://issues.apache.org/jira/browse/HDFS-148
+![error](../../ScreenShots/error.png "error")     
+**Find more about this bug report by others**:https://issues.apache.org/jira/browse/HDFS-148
