@@ -1,0 +1,56 @@
+mahout seqdirectory \
+   -c UTF-8 \
+   -i /CS525/mahout/tweets/ \
+   -o /CS525/mahout/seqfiles
+
+
+
+mahout seq2sparse \
+   -i /CS525/mahout/seqfiles/ \
+   -o /CS525/mahout/vectors/ \
+   -ow -chunk 100 \
+   -x 90 \
+   -seq \
+   -ml 50 \
+   -n 2 \
+   -nv
+
+
+mahout seqdumper -i /CS525/mahout/vectors/tfidf-vectors/part-r-00000 | more
+
+
+mahout seqdumper -i /CS525/mahout/vectors/tokenized-documents/part-m-00000 | more
+
+
+mahout seqdumper -i /CS525/mahout/vectors/dictionary.file-0 | more
+
+
+mahout kmeans \
+   -i /CS525/mahout/vectors/tfidf-vectors/ \
+   -c /CS525/mahout/kmeans-centroids \
+   -cl \
+   -o /CS525/mahout/kmeans-clusters \
+   -k 20 \
+   -ow \
+   -x 10 \
+   -dm org.apache.mahout.common.distance.CosineDistanceMeasure
+
+
+mahout seqdumper -i /CS525/mahout/kmeans-clusters/clusters-2-final/part-r-00000 | more
+
+mahout clusterdump \
+   -d /CS525/mahout/vectors/dictionary.file-0 \
+   -dt sequencefile \
+   -i /CS525/mahout/kmeans-clusters/clusters-1-final \
+   -n 20 \
+   -b 100 \
+   -o clusterDump.txt \
+   -p /CS525/mahout/kmeans-clusters/clusteredPoints/
+
+
+mahout seqdumper -i /CS525/mahout/kmeans-clusters/clusteredPoints/part-m-00000  | more
+
+
+mahout rowid \
+   -i /CS525/mahout/vectors/tfidf-vectors/part-r-00000 \
+   -o /CS525/mahout/matrix
