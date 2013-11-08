@@ -261,7 +261,7 @@ public class KmeansCluster extends Configured implements Tool
         {
             success ^= ToolRunner.run(conf, new KmeansCluster(), args);
             iteration++;
-        } while (success == 1 && iteration < MAXITERATIONS && (!stopIteration(conf)));
+        } while (success == 1 && (!stopIteration(conf)) && iteration < MAXITERATIONS);
          
 		
 		// for final output(just a mapper only task)
