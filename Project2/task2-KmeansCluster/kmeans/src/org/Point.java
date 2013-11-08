@@ -2,10 +2,15 @@ package org;
 
 import java.text.DecimalFormat;
 
+
+/*
+ * This is a point class, and it can be any dimention as you defined
+ */
 public class Point 
 {
-	
+	// define the dimention of the point
 	public static final int DIMENTION = 2;
+	// store values for different dimention in array
 	public double arr[];
 	 
 	public Point()
@@ -17,6 +22,7 @@ public class Point
 		}
 	}
 	 
+	// get Euler Distance
 	public static double getEulerDist(Point vec1,Point vec2)
 	{
 		if(!(vec1.arr.length == DIMENTION && vec2.arr.length == DIMENTION))
@@ -30,6 +36,8 @@ public class Point
 		}
 		return Math.sqrt(dist);
 	}
+
+	// get Manhant distance between two point
 	public static double getManhtDist(Point vec1,Point vec2)
 	{
 		if(!(vec1.arr.length==DIMENTION && vec2.arr.length==DIMENTION))
@@ -43,7 +51,8 @@ public class Point
 		}
 		return dist;
 	}
-	 
+	
+	// do clear up 
 	public void clear()
 	{
 		for(int i = 0;i < arr.length;i++)
