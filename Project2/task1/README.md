@@ -50,7 +50,9 @@
 	   -b 100 \
 	   -o clusterDump.txt \
 	   -p /CS525/mahout/kmeans-clusters/clusteredPoints/ 
-***Note: `clusterDump.txt` is in you local file system***, you can find it in your current directory where you run this command
+***Note      
+1. : `clusterDump.txt` is in you local file system***, you can find it in your current directory where you run this command       
+2. `-i /CS525/mahout/kmeans-clusters/clusters-1-final \`, the number in `clusters-X-final` may be changed, just check the HDFS.     
 
 ------
 Error when uploading files to HDFS:    
