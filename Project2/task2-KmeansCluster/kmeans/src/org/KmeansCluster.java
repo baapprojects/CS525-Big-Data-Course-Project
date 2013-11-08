@@ -269,7 +269,7 @@ public class KmeansCluster extends Configured implements Tool
         Job job = new Job(conf);
         job.setJarByClass(KmeansCluster.class);
         
-        FileInputFormat.setInputPaths(job, "/hzhou/output/newCentroid/part-r-00000");
+        FileInputFormat.setInputPaths(job, "/hzhou/input/kmeans");
         Path outDir = new Path("/hzhou/output/final");
         fs.delete(outDir,true);
         FileOutputFormat.setOutputPath(job, outDir);
