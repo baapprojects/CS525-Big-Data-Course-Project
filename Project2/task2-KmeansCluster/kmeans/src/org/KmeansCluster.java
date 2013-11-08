@@ -36,17 +36,24 @@ public class KmeansCluster extends Configured implements Tool
         {
             System.exit(1);
         }
+        
+        fs.delete(pervCenterFile,true);
+        if(fs.rename(currentCenterFile, pervCenterFile) == false)
+        {
+            System.exit(1);
+        }
+        
         //check whether the centers have changed or not to determine to do iteration or not
         boolean stop=true;
-        String line1;
+        String line;
  
-        FSDataInputStream in1 = fs.open(currentCenterFile);
-        InputStreamReader isr1 = new InputStreamReader(in1);
-        BufferedReader br1 = new BufferedReader(isr1);
+        FSDataInputStream in = fs.open(pervCenterFile);
+        InputStreamReader isr = new InputStreamReader(in);
+        BufferedReader br = new BufferedReader(isr);
 
-        while((line1 = br1.readLine()) != null)
+        while((line = br.readLine()) != null)
         {
-            String []str1 = line1.split(",");
+            String []str1 = line.split(",");
             int isntChange = Integer.parseInt(str1[2].trim());
             if(isntChange < 1)
             {
@@ -56,16 +63,6 @@ public class KmeansCluster extends Configured implements Tool
 
         }
         
-        
-        //if another iteration is needed, then replace previous controids with current centroids
-        if(stop == false)
-        {
-            fs.delete(pervCenterFile,true);
-            if(fs.rename(currentCenterFile, pervCenterFile) == false)
-            {
-                System.exit(1);
-            }
-        }
         return stop;
     }
      
@@ -120,7 +117,7 @@ public class KmeansCluster extends Configured implements Tool
 
             for(int i = 0;i < k; i++)
             {
-                double dist = Point.getEulerDist(point, centers.get(i));
+                double dist = Point.getManhtDist(point, centers.get(i));
                 if(dist < minDist)
                 {
                     minDist = dist;
@@ -205,7 +202,7 @@ public class KmeansCluster extends Configured implements Tool
             {
 				preCentroid.arr[i] = Double.parseDouble(str[i]);
 			}
-			if(Point.getEulerDist(preCentroid, newCenterPoint) <= THRESHOLD) // compare old and new centroids
+			if(Point.getManhtDist(preCentroid, newCenterPoint) <= THRESHOLD) // compare old and new centroids
             {
 				context.write(new Text(newCenterPoint.toString()),new Text(",1"));
 			}
@@ -261,7 +258,7 @@ public class KmeansCluster extends Configured implements Tool
         {
             success ^= ToolRunner.run(conf, new KmeansCluster(), args);
             iteration++;
-        } while (success == 1 && (!stopIteration(conf)) && iteration < MAXITERATIONS);
+        } while (success == 1 && (!stopIteration(conf)) && iteration < MAXITERATIONS );
          
 		
 		// for final output(just a mapper only task)
