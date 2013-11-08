@@ -17,6 +17,7 @@
 		-c UTF-8 \
 		-i /CS525/mahout/tweets/ \
 		-o /CS525/mahout/seqfiles
+***Note:This step is time-consuming, and it costs me about half an hour, which makes me thought Hadoop is down***
 
 ###Step 4. Generate tf-idf Vectors from Sequence files
 	mahout seq2sparse \
