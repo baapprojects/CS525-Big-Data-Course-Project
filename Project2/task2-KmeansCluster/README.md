@@ -20,6 +20,6 @@
 	> output: **key**: newCentroid.x, newCentroid.y --- **value**: **1** if centroid not changed, otherwise **0**
 
 
-###Final output:
+##Final output:
 1. We can get new centroid   
 2. We can get clustered points with its centroids
