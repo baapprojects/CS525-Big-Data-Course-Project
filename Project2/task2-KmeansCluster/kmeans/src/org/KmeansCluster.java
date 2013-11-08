@@ -149,10 +149,10 @@ public class KmeansCluster extends Configured implements Tool
 	}
 	
 	// do aggregation in local side
+	// add one more parameter in value field
 	public static class Combiner extends Reducer<Text, Text, Text, Text> 
 	{	  
 		@Override
-		//update every centroid except the last one
 		public void reduce(Text key,Iterable<Text> values,Context context) throws IOException,InterruptedException
 		{
 			Point sumPoint = new Point();
@@ -161,14 +161,7 @@ public class KmeansCluster extends Configured implements Tool
 			while(values.iterator().hasNext())
 			{
 				String line = values.iterator().next().toString();
-				String[] str1 = line.split(":");
-				/*
-				if(str1.length == 2)
-				{
-					count += Integer.parseInt(str1[1]);
-				}
-				*/
-				String[] str = str1[0].split(",");
+				String[] str = line.split(",");
 				for(int i = 0;i < Point.DIMENTION;i ++)
 				{
 					sumPoint.arr[i] += Double.parseDouble(str[i]);
@@ -194,7 +187,8 @@ public class KmeansCluster extends Configured implements Tool
 			int count = 0;
 			Point sumPoint = new Point();
 			Point newCenterPoint = new Point();
-			//String outputKey;
+
+			// while loop to calculate the sum of points
 			while(values.iterator().hasNext())
 			{
 				String line = values.iterator().next().toString();
@@ -206,18 +200,28 @@ public class KmeansCluster extends Configured implements Tool
 					sumPoint.arr[i] += Double.parseDouble(pointStr[i]);
 				}
 			}
+
+			// calculate the new centroid
 			for(int i = 0; i < Point.DIMENTION; i++)
 			{
 				newCenterPoint.arr[i] = sumPoint.arr[i]/count;
 			}
 			
+			// get prevois centroid
 			String[] str = key.toString().split(",");
 			Point preCentroid = new Point();
 			for(int i = 0; i < Point.DIMENTION; i++)
 			{
 				preCentroid.arr[i] = Double.parseDouble(str[i]);
 			}
-			if(Point.getManhtDist(preCentroid, newCenterPoint) <= THRESHOLD) // compare old and new centroids
+
+			// compare the new & previous centroids, 
+			/*
+			 * If it is not "changed", make the value of the output be 1
+			 * otherwise,  make the value of the output be 0
+			 * the value filed will be use in stopIteration() function, which will be called in main() after each iteration
+			 */
+			if(Point.getManhtDist(preCentroid, newCenterPoint) <= THRESHOLD) 
 			{
 				context.write(new Text(newCenterPoint.toString()),new Text(",1"));
 			}
@@ -251,7 +255,7 @@ public class KmeansCluster extends Configured implements Tool
 		job.setMapperClass(ClusterMapper.class);
 		job.setCombinerClass(Combiner.class);
 		job.setReducerClass(UpdateCenterReducer.class);
-		job.setNumReduceTasks(1);//
+		job.setNumReduceTasks(1);// so that all new centroids will output into one file
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(Text.class);
 		 
