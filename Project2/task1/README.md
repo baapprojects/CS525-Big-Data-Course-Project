@@ -5,7 +5,7 @@
 ##How to run this task
 ###Step 1. Generate the DataSet
 1. Compile & Run `DataSet.java` in `DataSetGenerator`
-2. Now, you get a file list of 119848 tweets(one tweet one file).   
+2. Now, you get a file list of 119848 tweets(one tweet one file) [it seems too many].   
 ###Step 2. Upload these files into HDFS 
 1. First, we create a directory in HDFS using: `hadoop fs -mkdir -p /CS525/mahout`    
 2. Now, we use this command to upload the tweets files: `hadoop fs -put ~/Desktop/tweets /CS525/mahout`   
@@ -46,4 +46,5 @@
 	   -n 20 \
 	   -b 100 \
 	   -o clusterDump.txt \
-	   -p /CS525/mahout/kmeans-clusters/clusteredPoints/
+	   -p /CS525/mahout/kmeans-clusters/clusteredPoints/ 
+***Note: `clusterDump.txt` is in you local file system***, you can find it in your current directory where you run this command
