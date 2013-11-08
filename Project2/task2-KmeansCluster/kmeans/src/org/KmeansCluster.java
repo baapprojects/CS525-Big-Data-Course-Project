@@ -24,9 +24,8 @@ import org.apache.hadoop.util.*;
 public class KmeansCluster extends Configured implements Tool
 {
     private static final int MAXITERATIONS = 6;
-    private static final double THRESHOLD = 10;
-    private static boolean StopSignalFromReducer = false;
-    private static int NoChangeCount = 0;
+    private static final double THRESHOLD = 70;
+
 
     public static boolean stopIteration(Configuration conf) throws IOException //called in main
     {
@@ -39,31 +38,25 @@ public class KmeansCluster extends Configured implements Tool
         }
         //check whether the centers have changed or not to determine to do iteration or not
         boolean stop=true;
-        String line1,line2;
-        FSDataInputStream in1 = fs.open(pervCenterFile);
-        FSDataInputStream in2 = fs.open(currentCenterFile);
+        String line1;
+ 
+        FSDataInputStream in1 = fs.open(currentCenterFile);
         InputStreamReader isr1 = new InputStreamReader(in1);
-        InputStreamReader isr2 = new InputStreamReader(in2);
         BufferedReader br1 = new BufferedReader(isr1);
-        BufferedReader br2 = new BufferedReader(isr2);
-        Point prevCenter,currCenter;
-        while((line1 = br1.readLine()) != null && (line2 = br2.readLine()) != null)
+
+        while((line1 = br1.readLine()) != null)
         {
-            prevCenter = new Point();
-            currCenter = new Point();
             String []str1 = line1.split(",");
-            String []str2 = line2.split(",");
-            for(int i = 0;i < Point.DIMENTION; i++)
-            {
-                prevCenter.arr[i] = Double.parseDouble(str1[i]);
-                currCenter.arr[i] = Double.parseDouble(str2[i]);
-            }
-            if(Point.getEulerDist(prevCenter, currCenter) > THRESHOLD)
+            int isntChange = Integer.parseInt(str1[2].trim());
+            if(isntChange < 1)
             {
                 stop = false;
                 break;
             }
+
         }
+        
+        
         //if another iteration is needed, then replace previous controids with current centroids
         if(stop == false)
         {
@@ -189,7 +182,7 @@ public class KmeansCluster extends Configured implements Tool
 			int count = 0;
 			Point sumPoint = new Point();
 			Point newCenterPoint = new Point();
-			String outputKey;
+			//String outputKey;
             while(values.iterator().hasNext())
             {
                 String line = values.iterator().next().toString();
@@ -205,16 +198,21 @@ public class KmeansCluster extends Configured implements Tool
             {
                 newCenterPoint.arr[i] = sumPoint.arr[i]/count;
 			}
+            
 			String[] str = key.toString().split(",");
-			if(newCenterPoint.arr[0]-Double.parseDouble(str[0]) <= THRESHOLD && newCenterPoint.arr[1]-Double.parseDouble(str[1]) <= THRESHOLD) // compare old and new centroids
+			Point preCentroid = new Point();
+			for(int i = 0; i < Point.DIMENTION; i++)
             {
-                NoChangeCount++;
-			}		
-			if(NoChangeCount == 10)
-			{
-				StopSignalFromReducer = true;
+				preCentroid.arr[i] = Double.parseDouble(str[i]);
 			}
-			context.write(new Text(newCenterPoint.toString()),new Text(","+String.valueOf(NoChangeCount)));
+			if(Point.getEulerDist(preCentroid, newCenterPoint) <= THRESHOLD) // compare old and new centroids
+            {
+				context.write(new Text(newCenterPoint.toString()),new Text(",1"));
+			}
+			else
+			{
+				context.write(new Text(newCenterPoint.toString()),new Text(",0"));
+			}
         }
         
         @Override
@@ -263,7 +261,7 @@ public class KmeansCluster extends Configured implements Tool
         {
             success ^= ToolRunner.run(conf, new KmeansCluster(), args);
             iteration++;
-        } while (success == 1 && iteration < MAXITERATIONS && (!stopIteration(conf)) && !StopSignalFromReducer);
+        } while (success == 1 && iteration < MAXITERATIONS && (!stopIteration(conf)));
          
 		
 		// for final output(just a mapper only task)
@@ -271,7 +269,7 @@ public class KmeansCluster extends Configured implements Tool
         Job job = new Job(conf);
         job.setJarByClass(KmeansCluster.class);
         
-        FileInputFormat.setInputPaths(job, "/hzhou/input/kmeans");
+        FileInputFormat.setInputPaths(job, "/hzhou/output/newCentroid/part-r-00000");
         Path outDir = new Path("/hzhou/output/final");
         fs.delete(outDir,true);
         FileOutputFormat.setOutputPath(job, outDir);
