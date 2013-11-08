@@ -7,7 +7,8 @@
 1. Compile & Run [DataSet.java](https://github.com/zhouhao/CS525-Big-Data-Course-Project/blob/master/Project2/task1/DataSetGenerator/DataSet.java)
 2. Now, you get a file list of 119848 tweets(one tweet one file) [it seems too many].   
 3. A tricky here: as there are too many files in that folder, it is hard to open it. But before we upload the folder to HDFS, we must remove the txt, and source files from it.      
-![mv](../../ScreenShots/move.png)
+![mv](../../ScreenShots/move.png)       
+
 ###Step 2. Upload these files into HDFS 
 1. First, we create a directory in HDFS using: `hadoop fs -mkdir -p /CS525/mahout`    
 2. Now, we use this command to upload the tweets files: `hadoop fs -put ~/Desktop/tweets /CS525/mahout`   
