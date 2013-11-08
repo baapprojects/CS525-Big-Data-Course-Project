@@ -50,3 +50,8 @@
 	   -o clusterDump.txt \
 	   -p /CS525/mahout/kmeans-clusters/clusteredPoints/ 
 ***Note: `clusterDump.txt` is in you local file system***, you can find it in your current directory where you run this command
+
+------
+Error when uploading files to HDFS:    
+![error](../../ScreenShots/error.png "error")
+https://issues.apache.org/jira/browse/HDFS-148
