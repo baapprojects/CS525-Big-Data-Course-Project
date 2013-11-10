@@ -267,7 +267,8 @@ public class KmeansCluster extends Configured implements Tool
 	{
 		Configuration conf = new Configuration();
 		FileSystem fs = FileSystem.get(conf);
-		 
+		
+		// set the path for cache, which will be loaded in ClusterMapper
 		Path dataFile = new Path("/hzhou/input/initK");
 		DistributedCache.addCacheFile(dataFile.toUri(), conf);
  
@@ -277,11 +278,9 @@ public class KmeansCluster extends Configured implements Tool
 		{
 			success ^= ToolRunner.run(conf, new KmeansCluster(), args);
 			iteration++;
-		} while (success == 1 && (!stopIteration(conf)) && iteration < MAXITERATIONS );
+		} while (success == 1 && (!stopIteration(conf)) && iteration < MAXITERATIONS ); // take care of the order, I make stopIteration() prior to iteration, because I must keep the initK always contain the lastest centroids after each iteration
 		 
-		
-		// for final output(just a mapper only task)
-		
+		// for final output(just a mapper only task <centroid, point>)
 		Job job = new Job(conf);
 		job.setJarByClass(KmeansCluster.class);
 		
