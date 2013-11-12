@@ -29,6 +29,9 @@ public class Point
 		Hashtable<String, Double> htVec2 = new Hashtable<String, Double>();
 		
 		// load data into hashTable
+		vec1 = Point.getVectorValue(vec1);
+		vec2 = Point.getVectorValue(vec2);
+		
 		String[] dimensions = vec1.split(",");
 		for(String dimension : dimensions )
 		{
@@ -62,11 +65,17 @@ public class Point
 		return dist;
 	}
 	
-	public static String getVectorvalue(String vec)
+	public static String getVectorValue(String vec)
 	{
 		vec  = vec.split("\\{")[1];
 		vec  = vec.split("\\}")[0];
 		return vec;
+	}
+	
+	public static String getVectorIndex(String vec)
+	{
+		String index  = vec.split(":")[0];
+		return index.trim();
 	}
 	
 	public static void main(String[] args)
@@ -82,12 +91,12 @@ public class Point
                 fileContent = dis.readLine() ;
                 formatContent = dis.readLine() ;
                 // parse these two vectors
-                fileContent = Point.getVectorvalue(fileContent);
-                formatContent = Point.getVectorvalue(formatContent);
+                //fileContent = Point.getVectorValue(fileContent);
+                //formatContent = Point.getVectorValue(formatContent);
                 double dist =  Point.getManhtDist(fileContent, formatContent);
                 
                 System.out.println(dist);
-                System.out.println(fileContent);
+                System.out.println(Point.getVectorIndex(fileContent));
                 System.out.println(formatContent);
                 dis.close();
         }
