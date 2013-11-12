@@ -5,8 +5,10 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /*
@@ -67,49 +69,50 @@ public class Point
 	
 	public static String getTweetValue(String vec)
 	{
-		vec  = vec.split("\\{")[1];
-		vec  = vec.split("\\}")[0];
-		return vec;
+		if(!vec.equals(""))
+		{
+			vec  = vec.split("\\{")[1];
+			vec  = vec.split("\\}")[0];
+			return vec;
+		}
+		else
+		{
+			return "";
+		}
+		
 	}
 	
-	public static String getSum(String vec1,String vec2)
+	public static String getSum(ArrayList<String> vecs)
 	{	
 		Set<String> dimensionSet = new HashSet<String>();
-		Hashtable<String, Double> htVec1 = new Hashtable<String, Double>();
-		Hashtable<String, Double> htVec2 = new Hashtable<String, Double>();
+		Hashtable<String, Double> htVec = new Hashtable<String, Double>();
 		StringBuilder sum = new StringBuilder();
 		
 		// load data into hashTable
-		vec1 = Point.getTweetValue(vec1);
-		vec2 = Point.getTweetValue(vec2);
-		
-		String[] dimensions = vec1.split(",");
-		for(String dimension : dimensions )
+		for(String vec : vecs )
 		{
-			String[] point = dimension.split(":");
-			String key = point[0].trim();
-			dimensionSet.add(key);
-			htVec1.put(key,Double.parseDouble(point[1]));
-			htVec2.put(key,0.0);
-		}
-		
-		dimensions = vec2.split(",");
-		for(String dimension : dimensions )
-		{
-			String[] point = dimension.split(":");
-			String key = point[0].trim();
-			dimensionSet.add(key);
-			htVec2.put(key,Double.parseDouble(point[1]));
-			if(!htVec1.containsKey(key))
+			vec = Point.getTweetValue(vec);
+			String[] dimensions = vec.split(",");
+			for(String dimension : dimensions )
 			{
-				htVec1.put(key,0.0);
+				String[] point = dimension.split(":");
+				String key = point[0].trim();
+				dimensionSet.add(key);
+				if(!htVec.containsKey(key))
+				{
+					htVec.put(key,Double.parseDouble(point[1]));
+				}
+				else
+				{
+					htVec.put(key,htVec.get(key)+Double.parseDouble(point[1]));
+				}
 			}
 		}
-		
+	
 		// calculate the distance
 		for(String key : dimensionSet)
 		{
-			sum.append(key+":"+String.valueOf(htVec1.get(key) + htVec2.get(key))+",");
+			sum.append(key+":"+String.valueOf(htVec.get(key)) + ",");
         }
 		
 		sum.setLength(sum.length() - 1);
@@ -138,14 +141,17 @@ public class Point
                 // get two vectors about tweets
                 fileContent = dis.readLine() ;
                 formatContent = dis.readLine() ;
-                // parse these two vectors
-                //fileContent = Point.getVectorValue(fileContent);
-                //formatContent = Point.getVectorValue(formatContent);
+
                 double dist =  Point.getManhtDist(fileContent, formatContent);
                 
                 System.out.println(dist);
                 System.out.println(Point.getTweetIndex(fileContent));
-                System.out.println(Point.getSum(fileContent, formatContent));
+                
+                ArrayList<String> vecs = new ArrayList<String>();
+                vecs.add(formatContent);
+                //vecs.add(fileContent);
+                System.out.println(Point.getSum(vecs));
+                
                 System.out.println(formatContent);
                 System.out.println(fileContent);
                 dis.close();
