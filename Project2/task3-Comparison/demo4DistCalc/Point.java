@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /*
@@ -122,6 +121,77 @@ public class Point
 		return sum.toString();
 	}
 	
+	public static String getSum(String vec1, String vec2)
+	{	
+		Set<String> dimensionSet = new HashSet<String>();
+		Hashtable<String, Double> htVec1 = new Hashtable<String, Double>();
+		Hashtable<String, Double> htVec2 = new Hashtable<String, Double>();
+		StringBuilder sum = new StringBuilder();
+		
+		// load data into hashTable
+		vec1 = Point.getTweetValue(vec1);
+		vec2 = Point.getTweetValue(vec2);
+		if(!vec1.equals(""))
+		{
+			String[] dimensions = vec1.split(",");
+			for(String dimension : dimensions )
+			{
+				String[] point = dimension.split(":");
+				String key = point[0].trim();
+				dimensionSet.add(key);
+				htVec1.put(key,Double.parseDouble(point[1]));
+				htVec2.put(key,0.0);
+			}
+		}
+		if(!vec2.equals(""))
+		{
+			String[] dimensions = vec2.split(",");
+			for(String dimension : dimensions )
+			{
+				String[] point = dimension.split(":");
+				String key = point[0].trim();
+				dimensionSet.add(key);
+				htVec2.put(key,Double.parseDouble(point[1]));
+				if(!htVec1.containsKey(key))
+				{
+					htVec1.put(key,0.0);
+				}
+			}
+		}
+		// calculate the distance
+		for(String key : dimensionSet)
+		{
+			sum.append(key+":"+String.valueOf(htVec1.get(key) + htVec2.get(key)) + ",");
+        }
+		if(sum.length() > 0)
+		{
+			sum.setLength(sum.length() - 1);
+		}
+		
+		return sum.toString();
+	}
+	
+	public static String getNewCentroid(String vectorSum, int count)
+	{
+		StringBuilder sum = new StringBuilder();
+		
+		// load data into hashTable
+		if(!vectorSum.equals(""))
+		{
+			String[] dimensions = vectorSum.split(",");
+			for(String dimension : dimensions )
+			{
+				String[] point = dimension.split(":");
+				String key = point[0].trim();
+				sum.append(key+":"+String.valueOf(Double.parseDouble(point[1])/count) + ",");
+			}
+		}
+		if(sum.length() > 0)
+		{
+			sum.setLength(sum.length() - 1);
+		}
+		return sum.toString();
+	}
 	
 	public static String getTweetIndex(String vec)
 	{
@@ -155,7 +225,10 @@ public class Point
                 System.out.println("2--"+Point.getSum(vecs));
                 //fileContent = Point.getTweetValue(fileContent);
                 vecs.add(fileContent);
-                System.out.println("3--"+Point.getSum(vecs));
+                String sumVec = Point.getSum(vecs);
+                System.out.println("3--"+sumVec);
+                System.out.println("3--"+Point.getNewCentroid(sumVec,2));
+                System.out.println("4--"+Point.getSum("", formatContent));
                 System.out.println(formatContent);
                 System.out.println(fileContent);
                 dis.close();
