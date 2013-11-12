@@ -29,8 +29,8 @@ public class Point
 		Hashtable<String, Double> htVec2 = new Hashtable<String, Double>();
 		
 		// load data into hashTable
-		vec1 = Point.getVectorValue(vec1);
-		vec2 = Point.getVectorValue(vec2);
+		vec1 = Point.getTweetValue(vec1);
+		vec2 = Point.getTweetValue(vec2);
 		
 		String[] dimensions = vec1.split(",");
 		for(String dimension : dimensions )
@@ -65,18 +65,66 @@ public class Point
 		return dist;
 	}
 	
-	public static String getVectorValue(String vec)
+	public static String getTweetValue(String vec)
 	{
 		vec  = vec.split("\\{")[1];
 		vec  = vec.split("\\}")[0];
 		return vec;
 	}
 	
-	public static String getVectorIndex(String vec)
+	public static String getSum(String vec1,String vec2)
+	{	
+		Set<String> dimensionSet = new HashSet<String>();
+		Hashtable<String, Double> htVec1 = new Hashtable<String, Double>();
+		Hashtable<String, Double> htVec2 = new Hashtable<String, Double>();
+		StringBuilder sum = new StringBuilder();
+		
+		// load data into hashTable
+		vec1 = Point.getTweetValue(vec1);
+		vec2 = Point.getTweetValue(vec2);
+		
+		String[] dimensions = vec1.split(",");
+		for(String dimension : dimensions )
+		{
+			String[] point = dimension.split(":");
+			String key = point[0].trim();
+			dimensionSet.add(key);
+			htVec1.put(key,Double.parseDouble(point[1]));
+			htVec2.put(key,0.0);
+		}
+		
+		dimensions = vec2.split(",");
+		for(String dimension : dimensions )
+		{
+			String[] point = dimension.split(":");
+			String key = point[0].trim();
+			dimensionSet.add(key);
+			htVec2.put(key,Double.parseDouble(point[1]));
+			if(!htVec1.containsKey(key))
+			{
+				htVec1.put(key,0.0);
+			}
+		}
+		
+		// calculate the distance
+		for(String key : dimensionSet)
+		{
+			sum.append(key+":"+String.valueOf(htVec1.get(key) + htVec2.get(key))+",");
+        }
+		
+		sum.setLength(sum.length() - 1);
+		
+		return sum.toString();
+	}
+	
+	
+	public static String getTweetIndex(String vec)
 	{
 		String index  = vec.split(":")[0];
 		return index.trim();
 	}
+	
+	
 	
 	public static void main(String[] args)
 	{
@@ -96,8 +144,10 @@ public class Point
                 double dist =  Point.getManhtDist(fileContent, formatContent);
                 
                 System.out.println(dist);
-                System.out.println(Point.getVectorIndex(fileContent));
+                System.out.println(Point.getTweetIndex(fileContent));
+                System.out.println(Point.getSum(fileContent, formatContent));
                 System.out.println(formatContent);
+                System.out.println(fileContent);
                 dis.close();
         }
         catch(FileNotFoundException e)
