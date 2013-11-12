@@ -69,7 +69,7 @@ public class Point
 	
 	public static String getTweetValue(String vec)
 	{
-		if(!vec.equals(""))
+		if(vec.contains("{") && vec.contains("}"))
 		{
 			vec  = vec.split("\\{")[1];
 			vec  = vec.split("\\}")[0];
@@ -77,7 +77,7 @@ public class Point
 		}
 		else
 		{
-			return "";
+			return vec;
 		}
 		
 	}
@@ -114,8 +114,10 @@ public class Point
 		{
 			sum.append(key+":"+String.valueOf(htVec.get(key)) + ",");
         }
-		
-		sum.setLength(sum.length() - 1);
+		if(sum.length() > 0)
+		{
+			sum.setLength(sum.length() - 1);
+		}
 		
 		return sum.toString();
 	}
@@ -148,10 +150,12 @@ public class Point
                 System.out.println(Point.getTweetIndex(fileContent));
                 
                 ArrayList<String> vecs = new ArrayList<String>();
+                System.out.println("1--"+Point.getSum(vecs));
                 vecs.add(formatContent);
-                //vecs.add(fileContent);
-                System.out.println(Point.getSum(vecs));
-                
+                System.out.println("2--"+Point.getSum(vecs));
+                //fileContent = Point.getTweetValue(fileContent);
+                vecs.add(fileContent);
+                System.out.println("3--"+Point.getSum(vecs));
                 System.out.println(formatContent);
                 System.out.println(fileContent);
                 dis.close();
