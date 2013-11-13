@@ -152,7 +152,7 @@ public class KmeansCluster extends Configured implements Tool
 				sumStr = Point.getSum(sumStr, line);
 				count++;
 			}
-			outputValue = sumStr + ":" + String.valueOf(count);  //value=Point_Sum+count
+			outputValue = sumStr + "-" + String.valueOf(count);  //value=Point_Sum+count
 			context.write(key, new Text(outputValue));
 		}
 	}
