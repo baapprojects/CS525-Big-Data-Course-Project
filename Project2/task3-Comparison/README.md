@@ -34,3 +34,4 @@
 
 **2). Mahout for the same task**    
 ![mahout_iterations](images/mahout_iterations.png)
+![mahout_iterations](images/mahout-cmd.png)
