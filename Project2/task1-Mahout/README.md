@@ -4,7 +4,7 @@
 
 ##How to run this task
 ###Step 1. Generate the DataSet
-1. Compile & Run [DataSet.java](https://github.com/zhouhao/CS525-Big-Data-Course-Project/blob/master/Project2/task1-Mahout/DataSetGenerator/DataSet.java) (**You may add code that remove empty lines in txt file, as I remove that in Sublime Text**)      
+1. Compile & Run [DataSet.java](https://github.com/zhouhao/CS525-Big-Data-Course-Project/blob/master/Project2/task1-Mahout/DataSetGenerator/DataSet.java) 
 	- a. Compile it with `javac DataSet.java`    
 	- b. Run it with `java DataSet`    
 2. Now, you get a file list of 119848 tweets(one tweet one file) [it seems too many].   
@@ -27,12 +27,13 @@
 	   -i /CS525/mahout/seqfiles/ \
 	   -o /CS525/mahout/vectors/ \
 	   -ow -chunk 100 \
-	   -x 90 \
+	   -x 50 \
 	   -seq \
 	   -ml 50 \
 	   -n 2 \
 	   -nv
-
+***Note:***  
+This uses the default analyzer and default TFIDF weighting, `-n 2` is good for **cosine distance**, which we are using in clustering and for similarity, `-x 50` meaning that if a token appears in 50% of the docs it is considered a stop word, `-nv` to get named vectors making further data files easier to inspect.
 ###Step 5. Generate Kmeans Cluster from vectors
 	mahout kmeans \
 	   -i /CS525/mahout/vectors/tfidf-vectors/ \
@@ -53,7 +54,7 @@
 	   -b 100 \
 	   -o clusterDump.txt \
 	   -p /CS525/mahout/kmeans-clusters/clusteredPoints/
-***Note***      
+***Note:***      
 1. `clusterDump.txt` is in you local file system, you can find it in your current directory where you run this command       
 2. `-i /CS525/mahout/kmeans-clusters/clusters-1-final \`, the number in `clusters-X-final` may be changed, just check the HDFS.      
 3. Remove `-p /CS525/mahout/kmeans-clusters/clusteredPoints/`, so that you will just dump the top terms  
