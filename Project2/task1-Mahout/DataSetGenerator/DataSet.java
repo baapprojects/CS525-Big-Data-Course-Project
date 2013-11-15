@@ -22,11 +22,14 @@ public class DataSet
 			 */
 			while((fileContent = dis.readLine()) != null)
 			{
-					
-				FileWriter fw = new FileWriter(String.valueOf(index)); 
-				fw.write(fileContent);
-			 	fw.close();
-			 	index++;
+				if(!fileContent.trim().equals(""))
+				{
+					FileWriter fw = new FileWriter(String.valueOf(index)); 
+					fw.write(fileContent);
+				 	fw.close();
+				 	index++;
+				}
+				
 			 	
 				/*
 				// This part is used for test
