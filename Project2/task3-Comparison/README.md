@@ -13,17 +13,18 @@
 
 ###Report
 **MapReduce**:    
-1. **9** iterations -- The output for each iteration is the **new centroids**(My mistake, I should run 10 iterations)    
-CPU Time 1: 69670         
-CPU Time 2: 75660     
-CPU Time 3: 77180     
-CPU Time 4: 76380     
-CPU Time 5: 77490     
-CPU Time 6: 77170     
-CPU Time 7: 78300     
-CPU Time 8: 77340     
-CPU Time 9: 77940      
-**[start at 13:38:57 ~ end at 13:52:34] = 13 minutes 37 seconds**
-    
+1. **9** iterations -- The output for each iteration is the **new centroids**(My mistake, I should run 10 iterations)   
+ **[start at 13:38:57 ~ end at 13:52:34] = 13 minutes 37 seconds**     
+
+	CPU Time 1: 69670         
+	CPU Time 2: 75660     
+	CPU Time 3: 77180     
+	CPU Time 4: 76380     
+	CPU Time 5: 77490     
+	CPU Time 6: 77170     
+	CPU Time 7: 78300     
+	CPU Time 8: 77340     
+	CPU Time 9: 77940      
+
 2. **Final output of Clusters with its tweets** -- map only    
 CPU Time: 3670    
