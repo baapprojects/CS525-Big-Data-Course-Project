@@ -3,12 +3,10 @@ package org;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Vector;
 
 import org.apache.hadoop.conf.*;
 import org.apache.hadoop.filecache.DistributedCache;
-import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.*;
@@ -29,11 +27,11 @@ public class KmeansCluster extends Configured implements Tool
 	//private static final double THRESHOLD = 2;
 
 
-	public static boolean stopIteration(Configuration conf) throws IOException 
+	public static void updateCentroids(Configuration conf) throws IOException 
 	{
 		FileSystem fs = FileSystem.get(conf);
 		Path pervCenterFile = new Path("/task3/centroids");
-		Path currentCenterFile = new Path("/task3/newCentroid/part-r-00000");
+		Path currentCenterFile = new Path("/task3/tmpFolder/part-r-00000");
 		if(!(fs.exists(pervCenterFile) && fs.exists(currentCenterFile)))
 		{
 			System.exit(1);
@@ -50,28 +48,6 @@ public class KmeansCluster extends Configured implements Tool
 			System.exit(1);
 		}
 		
-		//check whether the centers have changed or not to determine to do iteration or not
-		boolean stop=true;
-		String line;
-		FSDataInputStream in = fs.open(pervCenterFile);
-		InputStreamReader isr = new InputStreamReader(in);
-		BufferedReader br = new BufferedReader(isr);
-
-		/* get each line, check the third parameter, if it is 0, it means this centoid is changed from last iteration, 
-		 * so, we need more iteration
-		 */
-		while((line = br.readLine()) != null)
-		{
-			String []str1 = line.split(",");
-			int isntChange = Integer.parseInt(str1[2].trim());
-			if(isntChange < 1)
-			{
-				stop = false;
-				break;
-			}
-		}
-		
-		return stop;
 	}
 	 
 	
@@ -112,7 +88,6 @@ public class KmeansCluster extends Configured implements Tool
 			int index = -1;
 			double minDist = Double.MAX_VALUE;
 			String tweetVector = value.toString().trim();
-			//String tweetIndex = Point.getTweetIndex(tweetVector);
 			
 
 			// find the nearest centroid to this point
@@ -150,10 +125,8 @@ public class KmeansCluster extends Configured implements Tool
 			{
 				String line = values.iterator().next().toString();
 				sumStr = Point.getSum(sumStr, line);
-				
 				count++;
-				//if(count > 10)
-				//	break;
+
 			}
 			
 			outputValue = sumStr + "-" + String.valueOf(count);  //value=Point_Sum+count
@@ -188,16 +161,7 @@ public class KmeansCluster extends Configured implements Tool
 			// calculate the new centroid
 			newCentroid = Point.getNewCentroid(sumStr, count);
 			newCentroid = Point.getTopTerms(newCentroid, 30);
-			// get prevois centroid
-			//String preCentroid = key.toString();
-			
 
-			// compare the new & previous centroids, 
-			/*
-			 * If it is not "changed", make the value of the output be 1
-			 * otherwise,  make the value of the output be 0
-			 * the value filed will be use in stopIteration() function, which will be called in main() after each iteration
-			 */
 			context.write(new Text(newCentroid),new Text());
 			
 		}
@@ -248,6 +212,7 @@ public class KmeansCluster extends Configured implements Tool
 		do 
 		{
 			success ^= ToolRunner.run(conf, new KmeansCluster(), args);
+			updateCentroids(conf);
 			iteration++;
 		} while (success == 1  && iteration < MAXITERATIONS ); // take care of the order, I make stopIteration() prior to iteration, because I must keep the initK always contain the lastest centroids after each iteration
 		 
