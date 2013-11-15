@@ -63,12 +63,14 @@ This uses the default analyzer and default TFIDF weighting, `-n 2` is good for *
 3. Remove `-p /CS525/mahout/kmeans-clusters/clusteredPoints/`, so that you will just dump the top terms  
 
 ##Result
-1. Click to check the output for [20-cluster](https://github.com/zhouhao/CS525-Big-Data-Course-Project/blob/master/Project2/task1-Mahout/ClusterResultDump/clusterDump-20.txt)(Output top 10 terms for each cluster)     
-##Times 
+1. Click to check the output for [20-cluster](https://github.com/zhouhao/CS525-Big-Data-Course-Project/blob/master/Project2/task1-Mahout/ClusterResultDump/clusterDump-20.txt)(Output top 10 terms for each cluster)       
+
+##Times
 ###0. For all:
 1. 21.00 minutes - [`hadoop fs -put`] - Uploading tweets to HDFS - **This time is not accurate**   
 2. 19.78 minutes - [`mahout seqdirectory`]    
-3. 02.01 minutes - [`mahout seq2sparse`] 
+3. 02.01 minutes - [`mahout seq2sparse`]    
+
 ###1. Cluster - 20:
 1. 00.90 minutes - [`mahout kmeans`]     
 2. 00.04 minutes - [`mahout clusterdump`]    
