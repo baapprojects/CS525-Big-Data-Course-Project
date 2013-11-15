@@ -32,8 +32,8 @@ public class KmeansCluster extends Configured implements Tool
 	public static boolean stopIteration(Configuration conf) throws IOException 
 	{
 		FileSystem fs = FileSystem.get(conf);
-		Path pervCenterFile = new Path("/hzhou/input/initK");
-		Path currentCenterFile = new Path("/hzhou/output/newCentroid/part-r-00000");
+		Path pervCenterFile = new Path("/task2/initK");
+		Path currentCenterFile = new Path("/task2/newCentroid/part-r-00000");
 		if(!(fs.exists(pervCenterFile) && fs.exists(currentCenterFile)))
 		{
 			System.exit(1);
@@ -41,8 +41,8 @@ public class KmeansCluster extends Configured implements Tool
 		
 		// delete pervCenterFile, then rename the currentCenterFile to pervCenterFile
 		/* Why rename needed here: 
-		 * as each iteration, the mapper will get centroid from Path("/hzhou/input/initK")
-		 * but reducer will output new centroids into Path("/hzhou/output/newCentroid/part-r-00000")
+		 * as each iteration, the mapper will get centroid from Path("/task2/initK")
+		 * but reducer will output new centroids into Path("/task2/newCentroid/part-r-00000")
 		 */ 
 		fs.delete(pervCenterFile,true);
 		if(fs.rename(currentCenterFile, pervCenterFile) == false)
@@ -81,7 +81,7 @@ public class KmeansCluster extends Configured implements Tool
 		Point point = new Point();
 		int k = 0;
 
-		// load centroids from Path("/hzhou/input/initK") in setup() function
+		// load centroids from Path("/task2/initK") in setup() function
 		@Override
 		public void setup(Context context)
 		{
@@ -161,12 +161,22 @@ public class KmeansCluster extends Configured implements Tool
 			while(values.iterator().hasNext())
 			{
 				String line = values.iterator().next().toString();
-				String[] str = line.split(",");
+				String[] str = line.split(":");
+				String[] pointStr = str[0].split(",");
+				if(str.length == 2)
+				{
+					count += Integer.parseInt(str[1]);
+				}
+				else
+				{
+					count++;
+				}
+				
 				for(int i = 0;i < Point.DIMENTION;i ++)
 				{
-					sumPoint.arr[i] += Double.parseDouble(str[i]);
+					sumPoint.arr[i] += Double.parseDouble(pointStr[i]);
 				}
-				count++;
+				
 			}
 			outputValue = sumPoint.toString() + ":" + String.valueOf(count);  //value=Point_Sum+count
 			context.write(key, new Text(outputValue));
@@ -245,8 +255,8 @@ public class KmeansCluster extends Configured implements Tool
 		Job job = new Job(conf);
 		job.setJarByClass(KmeansCluster.class);
 		
-		FileInputFormat.setInputPaths(job, "/hzhou/input/kmeans");
-		Path outDir = new Path("/hzhou/output/newCentroid");
+		FileInputFormat.setInputPaths(job, "/task2/kmeans");
+		Path outDir = new Path("/task2/newCentroid");
 		fs.delete(outDir,true);
 		FileOutputFormat.setOutputPath(job, outDir);
 		 
@@ -269,7 +279,7 @@ public class KmeansCluster extends Configured implements Tool
 		FileSystem fs = FileSystem.get(conf);
 		
 		// set the path for cache, which will be loaded in ClusterMapper
-		Path dataFile = new Path("/hzhou/input/initK");
+		Path dataFile = new Path("/task2/initK");
 		DistributedCache.addCacheFile(dataFile.toUri(), conf);
  
 		int iteration = 1;
@@ -284,8 +294,8 @@ public class KmeansCluster extends Configured implements Tool
 		Job job = new Job(conf);
 		job.setJarByClass(KmeansCluster.class);
 		
-		FileInputFormat.setInputPaths(job, "/hzhou/input/kmeans");
-		Path outDir = new Path("/hzhou/output/final");
+		FileInputFormat.setInputPaths(job, "/task2/kmeans");
+		Path outDir = new Path("/task2/final");
 		fs.delete(outDir,true);
 		FileOutputFormat.setOutputPath(job, outDir);
 		 
@@ -293,8 +303,8 @@ public class KmeansCluster extends Configured implements Tool
 		job.setOutputFormatClass(TextOutputFormat.class);
 		job.setMapperClass(ClusterMapper.class);
 		job.setNumReduceTasks(0);
-		job.setOutputKeyClass(Point.class);
-		job.setOutputValueClass(Point.class);
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(Text.class);
 		 
 		job.waitForCompletion(true);
 		
