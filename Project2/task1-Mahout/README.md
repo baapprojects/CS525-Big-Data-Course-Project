@@ -44,7 +44,10 @@ This uses the default analyzer and default TFIDF weighting, `-n 2` is good for *
 	   -ow \
 	   -x 10 \
 	   -dm org.apache.mahout.common.distance.CosineDistanceMeasure
-
+***Note:***   
+1. If `-c` and `-k` are specified, kmeans will put random seed vectors into the `-c` directory, if `-c` is provided without `-k` then the `-c` directory is assumed to be input and kmeans will use each vector in it to seed the clustering. `-cl` tell kmeans to also assign the input doc vectors to clusters at the end of the process and put them in `/CS525/mahout/kmeans-clusters/clusteredPoints`. if `-cl` is not specified then the documents will not be assigned to clusters.    
+2. `-x 10` means that the number of iterations will be 10    
+3. `-k 20` means that the number of clusters will be 10  
 ###Step 6. Examine the clusters 
 	mahout clusterdump \
 	   -d /CS525/mahout/vectors/dictionary.file-0 \
@@ -60,7 +63,10 @@ This uses the default analyzer and default TFIDF weighting, `-n 2` is good for *
 3. Remove `-p /CS525/mahout/kmeans-clusters/clusteredPoints/`, so that you will just dump the top terms  
 
 
+
+
 ------
+##Appendix:
 <del>Error when uploading files to HDFS:</del> -- Doesn't happen when I do the second time in another machine.    
 ![error](../../ScreenShots/error.png "error")     
 **Find more about this bug report by others**:https://issues.apache.org/jira/browse/HDFS-148
