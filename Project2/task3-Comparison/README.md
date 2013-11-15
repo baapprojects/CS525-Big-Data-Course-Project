@@ -8,7 +8,7 @@
 ###What to do next
 1. Make combiner more robust     
 2. Generate top 10 terms for each cluster -- Not so hard (in different MapReduce Job)  
-3. Run on more iterations    
+3. <del>Run on more iterations</del>    
 4. Compare with Mahout with Pengfei's work  
 
 ###Report
