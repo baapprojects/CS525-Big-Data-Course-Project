@@ -197,5 +197,65 @@ public class Point
 		String index  = vec.split(":")[0];
 		return index.trim();
 	}
+
+	public static String getTopTerms(String vec, int count)
+	{
+		StringBuilder topTerms = new StringBuilder();
+		Set<String> dimensionSet = new HashSet<String>();
+		Hashtable<String, Double> htVec = new Hashtable<String, Double>();
+		DecimalFormat df = new DecimalFormat("0.0000");
+		
+		// load data into hashTable
+		
+		vec = Point.getTweetValue(vec);
+		String[] dimensions = vec.split(",");
+		for(String dimension : dimensions )
+		{
+			String[] point = dimension.split(":");
+			String key = point[0].trim();
+			dimensionSet.add(key);
+			if(!htVec.containsKey(key))
+			{
+				htVec.put(key,Double.parseDouble(point[1]));
+			}
+			else
+			{
+				htVec.put(key,htVec.get(key)+Double.parseDouble(point[1]));
+			}
+		}
+		
+		int topCount = dimensions.length > count ? count : dimensions.length;
+
+		for(int i = 0; i < topCount; i++)
+		{
+			String index = "";
+			double value = Double.MIN_VALUE;
+			for(String key : dimensionSet)
+			{
+				if(index.equals(""))
+				{
+					index = key;
+					value = htVec.get(key);
+				}
+				else
+				{
+					if(value < htVec.get(key))
+					{
+						index = key;
+						value = htVec.get(key);
+					}
+				}
+			}
+			
+			dimensionSet.remove(index);
+			topTerms.append(index+":"+df.format(htVec.get(index)) + ",");
+		}
+		if(topTerms.length() > 0)
+		{
+			topTerms.setLength(topTerms.length() - 1);
+		}
+
+		return topTerms.toString();
+	}
 	
 }
