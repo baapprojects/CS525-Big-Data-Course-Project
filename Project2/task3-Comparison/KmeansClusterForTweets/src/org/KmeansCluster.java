@@ -24,16 +24,16 @@ import org.apache.hadoop.util.*;
 public class KmeansCluster extends Configured implements Tool
 {
 	// iteration Control, Maximun 6 iterations here
-	private static final int MAXITERATIONS = 0;
+	private static final int MAXITERATIONS = 2;
 	// threshold to determine whether a new centroid is changed from previous one
-	private static final double THRESHOLD = 2;
+	//private static final double THRESHOLD = 2;
 
 
 	public static boolean stopIteration(Configuration conf) throws IOException 
 	{
 		FileSystem fs = FileSystem.get(conf);
-		Path pervCenterFile = new Path("/hzhou/centroids");
-		Path currentCenterFile = new Path("/hzhou/newCentroid/part-r-00000");
+		Path pervCenterFile = new Path("/task3/centroids");
+		Path currentCenterFile = new Path("/task3/newCentroid/part-r-00000");
 		if(!(fs.exists(pervCenterFile) && fs.exists(currentCenterFile)))
 		{
 			System.exit(1);
@@ -41,8 +41,8 @@ public class KmeansCluster extends Configured implements Tool
 		
 		// delete pervCenterFile, then rename the currentCenterFile to pervCenterFile
 		/* Why rename needed here: 
-		 * as each iteration, the mapper will get centroid from Path("/hzhou/input/initK")
-		 * but reducer will output new centroids into Path("/hzhou/output/newCentroid/part-r-00000")
+		 * as each iteration, the mapper will get centroid from Path("/task3/input/initK")
+		 * but reducer will output new centroids into Path("/task3/output/newCentroid/part-r-00000")
 		 */ 
 		fs.delete(pervCenterFile,true);
 		if(fs.rename(currentCenterFile, pervCenterFile) == false)
@@ -80,7 +80,7 @@ public class KmeansCluster extends Configured implements Tool
 		Vector<String> centers = new Vector<String>();
 		int k = 0;
 
-		// load centroids from Path("/hzhou/input/initK") in setup() function
+		// load centroids from Path("/task3/input/initK") in setup() function
 		@Override
 		public void setup(Context context)
 		{
@@ -149,15 +149,15 @@ public class KmeansCluster extends Configured implements Tool
 			while(values.iterator().hasNext())
 			{
 				String line = values.iterator().next().toString();
-				//sumStr = Point.getSum(sumStr, line);
+				sumStr = Point.getSum(sumStr, line);
 				
 				count++;
 				//if(count > 10)
 				//	break;
 			}
 			
-			//outputValue = sumStr + "-" + String.valueOf(count);  //value=Point_Sum+count
-			context.write(new Text("1"), new Text(String.valueOf(count)));
+			outputValue = sumStr + "-" + String.valueOf(count);  //value=Point_Sum+count
+			context.write(key, new Text(outputValue));
 		}
 	}
  
@@ -180,16 +180,16 @@ public class KmeansCluster extends Configured implements Tool
 			while(values.iterator().hasNext())
 			{
 				String line = values.iterator().next().toString();
-				String[] str = line.split(":");
+				String[] str = line.split("-");
 				count += Integer.parseInt(str[1]);
 				sumStr = Point.getSum(sumStr, str[0]);
 			}
 
 			// calculate the new centroid
 			newCentroid = Point.getNewCentroid(sumStr, count);
-			
+			newCentroid = Point.getTopTerms(newCentroid, 30);
 			// get prevois centroid
-			String preCentroid = key.toString();
+			//String preCentroid = key.toString();
 			
 
 			// compare the new & previous centroids, 
@@ -198,14 +198,8 @@ public class KmeansCluster extends Configured implements Tool
 			 * otherwise,  make the value of the output be 0
 			 * the value filed will be use in stopIteration() function, which will be called in main() after each iteration
 			 */
-			if(Point.getManhtDist(preCentroid, newCentroid) <= THRESHOLD) 
-			{
-				context.write(new Text(newCentroid),new Text(",1"));
-			}
-			else
-			{
-				context.write(new Text(newCentroid),new Text(",0"));
-			}
+			context.write(new Text(newCentroid),new Text());
+			
 		}
 		
 		@Override
@@ -222,8 +216,8 @@ public class KmeansCluster extends Configured implements Tool
 		Job job = new Job(conf);
 		job.setJarByClass(KmeansCluster.class);
 		
-		FileInputFormat.setInputPaths(job, "/hzhou/tfidf-vectors");
-		Path outDir = new Path("/hzhou/combinerTest");//newCentroid");
+		FileInputFormat.setInputPaths(job, "/task3/tfidf-vectors");
+		Path outDir = new Path("/task3/tmpFolder");//newCentroid");
 		fs.delete(outDir,true);
 		FileOutputFormat.setOutputPath(job, outDir);
 		 
@@ -231,8 +225,8 @@ public class KmeansCluster extends Configured implements Tool
 		job.setOutputFormatClass(TextOutputFormat.class);
 		job.setMapperClass(ClusterMapper.class);
 		job.setCombinerClass(Combiner.class);
-		//job.setReducerClass(UpdateCenterReducer.class);
-		//job.setNumReduceTasks(1);// so that all new centroids will output into one file
+		job.setReducerClass(UpdateCenterReducer.class);
+		job.setNumReduceTasks(1);// so that all new centroids will output into one file
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(Text.class);
 		 
@@ -246,24 +240,24 @@ public class KmeansCluster extends Configured implements Tool
 		FileSystem fs = FileSystem.get(conf);
 		
 		// set the path for cache, which will be loaded in ClusterMapper
-		Path dataFile = new Path("/hzhou/centroids");
+		Path dataFile = new Path("/task3/centroids");
 		DistributedCache.addCacheFile(dataFile.toUri(), conf);
  
 		int iteration = 1;
 		int success = 1;
-		//do 
-		//{
+		do 
+		{
 			success ^= ToolRunner.run(conf, new KmeansCluster(), args);
 			iteration++;
-		//} while (success == 1 && (!stopIteration(conf)) && iteration < MAXITERATIONS ); // take care of the order, I make stopIteration() prior to iteration, because I must keep the initK always contain the lastest centroids after each iteration
+		} while (success == 1  && iteration < MAXITERATIONS ); // take care of the order, I make stopIteration() prior to iteration, because I must keep the initK always contain the lastest centroids after each iteration
 		 
 		// for final output(just a mapper only task <centroid, point>)
-		/*
+		
 		Job job = new Job(conf);
 		job.setJarByClass(KmeansCluster.class);
 		
-		FileInputFormat.setInputPaths(job, "/hzhou/tfidf-vectors");
-		Path outDir = new Path("/hzhou/finalCluster");
+		FileInputFormat.setInputPaths(job, "/task3/tfidf-vectors");
+		Path outDir = new Path("/task3/finalCluster");
 		fs.delete(outDir,true);
 		FileOutputFormat.setOutputPath(job, outDir);
 		 
@@ -275,6 +269,6 @@ public class KmeansCluster extends Configured implements Tool
 		job.setOutputValueClass(Text.class);
 		 
 		job.waitForCompletion(true);
-		*/
+		
 	}
 }
