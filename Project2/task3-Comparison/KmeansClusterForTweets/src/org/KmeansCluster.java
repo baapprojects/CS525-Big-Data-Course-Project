@@ -145,15 +145,19 @@ public class KmeansCluster extends Configured implements Tool
 		{
 			String outputValue;
 			String sumStr = "";
-			int count=0;
+			int count = 0;
 			while(values.iterator().hasNext())
 			{
 				String line = values.iterator().next().toString();
-				sumStr = Point.getSum(sumStr, line);
+				//sumStr = Point.getSum(sumStr, line);
+				
 				count++;
+				//if(count > 10)
+				//	break;
 			}
-			outputValue = sumStr + "-" + String.valueOf(count);  //value=Point_Sum+count
-			context.write(key, new Text(outputValue));
+			
+			//outputValue = sumStr + "-" + String.valueOf(count);  //value=Point_Sum+count
+			context.write(new Text("1"), new Text(String.valueOf(count)));
 		}
 	}
  
@@ -219,14 +223,14 @@ public class KmeansCluster extends Configured implements Tool
 		job.setJarByClass(KmeansCluster.class);
 		
 		FileInputFormat.setInputPaths(job, "/hzhou/tfidf-vectors");
-		Path outDir = new Path("/hzhou/newCentroid");
+		Path outDir = new Path("/hzhou/combinerTest");//newCentroid");
 		fs.delete(outDir,true);
 		FileOutputFormat.setOutputPath(job, outDir);
 		 
 		job.setInputFormatClass(TextInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
 		job.setMapperClass(ClusterMapper.class);
-		//job.setCombinerClass(Combiner.class);
+		job.setCombinerClass(Combiner.class);
 		//job.setReducerClass(UpdateCenterReducer.class);
 		//job.setNumReduceTasks(1);// so that all new centroids will output into one file
 		job.setOutputKeyClass(Text.class);
