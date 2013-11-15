@@ -28,5 +28,9 @@
 		CPU Time 9: 77940        
 		
 2. **Final output of Clusters with its tweets** -- map only    
- **[start at 13:52:34 ~ end at 13:52:42] = 8 seconds**        
+ **[start at 13:52:34 ~ end at 13:52:42] = 8 seconds**       
+ 
 		CPU Time: 3670    
+
+**Mahout for the same task**    
+
