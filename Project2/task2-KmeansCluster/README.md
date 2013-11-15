@@ -7,17 +7,17 @@
 **Broadcast k centroids to all map nodes**(`DistributedCache` is used here).    
 ##Input & Output
 1. **ClusterMapper**:     
-	>a. input is a `point`   
-	>b. Compare its distance to all the centroids, then find the nearest one   
-	>c. output: **key**: centroid.x, centroid.y --- **value**: point.x, point.y            
+	a. input is a `point`   
+	b. Compare its distance to all the centroids, then find the nearest one   
+	c. output: **key**: centroid.x, centroid.y --- **value**: point.x, point.y            
 2. **Combiner**:    
-	>a.just do aggregation for mapper result here     
-	>b. output: **key(no change from mapper)**: centroid.x, centroid.y --- **value**: sum(point.x), sum(point.y), *countOfPointsForThisKey* 
+	a.just do aggregation for mapper result here     
+	b. output: **key(no change from mapper)**: centroid.x, centroid.y --- **value**: sum(point.x), sum(point.y), *countOfPointsForThisKey* 
 3. **UpdateCenterReducer**:     
-	>Two steps here        
-	>Step 1. Do the same work as combiner for global points    
-	>Step 2. According to the result from step 1, generate new centroid, and compare new centroid with previous one    
-	> output: **key**: newCentroid.x, newCentroid.y --- **value**: **1** if centroid not changed, otherwise **0**
+	Two steps here        
+	Step 1. Do the same work as combiner for global points    
+	Step 2. According to the result from step 1, generate new centroid, and compare new centroid with previous one    
+	output: **key**: newCentroid.x, newCentroid.y --- **value**: **1** if centroid not changed, otherwise **0**
 
 
 ##Final output:
