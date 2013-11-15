@@ -12,7 +12,7 @@
 4. Compare with Mahout with Pengfei's work  
 
 ###Report
-**MapReduce**:    
+**1). MapReduce**:    
 
 1. **9** iterations -- The output for each iteration is the **new centroids**(My mistake, I should run 10 iterations)   
  **[start at 13:38:57 ~ end at 13:52:34] = 13 minutes 37 seconds**     
@@ -32,5 +32,5 @@
  
 		CPU Time: 3670    
 
-**Mahout for the same task**    
+**2). Mahout for the same task**    
 
