@@ -33,4 +33,4 @@
 		CPU Time: 3670    
 
 **2). Mahout for the same task**    
-
+![mahout_iterations](images/mahout_iterations.png)
