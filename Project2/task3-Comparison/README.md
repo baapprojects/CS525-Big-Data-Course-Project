@@ -33,5 +33,18 @@
 		CPU Time: 3670    
 
 **2). Mahout for the same task**    
-![mahout_iterations](images/mahout_iterations.png)
-![mahout_iterations](images/mahout-cmd.png)
+![mahout_iterations](images/mahout_iterations.png)        
+![mahout_iterations](images/mahout-cmd.png)   
+
+	mahout kmeans \
+	  -i /task4/vectors/tfidf-vectors/ \
+	  -c /task4/kmeans-centroids \
+	  -cl \
+	  -o /task4/kmeans-clusters \
+	  -k 10 \
+	  -ow \
+	  -x 9 \
+	  -dm org.apache.mahout.common.distance.CosineDistanceMeasure
+
+From above, we see that even we set the iteration time to 9, Mahout finished Cluster job in 3 iterations. And the time it used is about 1 minutes, which is far shorter than our MapReduce job.    
+
