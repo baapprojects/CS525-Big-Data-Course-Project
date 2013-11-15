@@ -32,7 +32,7 @@
  
 		CPU Time: 3670    
 
-3. The output of top 10 terms for each cluster is [here](https://github.com/zhouhao/CS525-Big-Data-Course-Project/blob/master/Project2/task3-Comparison/output/topTerm-10-MapReduce.txt)
+3. **Descriptors**: The output of top 10 terms for each cluster is [here](https://github.com/zhouhao/CS525-Big-Data-Course-Project/blob/master/Project2/task3-Comparison/output/topTerm-10-MapReduce.txt)
     
 **2). Mahout for the same task**    
 ![mahout_iterations](images/mahout_iterations.png)        
@@ -49,4 +49,8 @@
 	  -dm org.apache.mahout.common.distance.CosineDistanceMeasure
 
 From above, we see that even we set the iteration time to 9, Mahout finished Cluster job in 3 iterations. And the time it used is about 1 minutes, which is far shorter than our MapReduce job.    
+   
+I think the reason is that Mahout is professional at Recommendation (include clustering), which beats ours.    
+
+ 
 
