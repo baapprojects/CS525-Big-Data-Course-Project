@@ -24,9 +24,9 @@ import org.apache.hadoop.util.*;
 public class KmeansCluster extends Configured implements Tool
 {
 	// iteration Control, Maximun 6 iterations here
-	private static final int MAXITERATIONS = 6;
+	private static int MAXITERATIONS = 6;
 	// threshold to determine whether a new centroid is changed from previous one
-	private static final double THRESHOLD = 70;
+	private static double THRESHOLD = 70;
 
 
 	public static boolean stopIteration(Configuration conf) throws IOException 
@@ -277,6 +277,9 @@ public class KmeansCluster extends Configured implements Tool
 	{
 		Configuration conf = new Configuration();
 		FileSystem fs = FileSystem.get(conf);
+		
+		MAXITERATIONS = Integer.parseInt(args[0]);
+		THRESHOLD = Double.parseDouble(args[1]);
 		
 		// set the path for cache, which will be loaded in ClusterMapper
 		Path dataFile = new Path("/task2/initK");
