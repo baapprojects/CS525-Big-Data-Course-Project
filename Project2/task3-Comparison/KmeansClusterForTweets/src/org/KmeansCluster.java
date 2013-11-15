@@ -207,7 +207,7 @@ public class KmeansCluster extends Configured implements Tool
 		Path dataFile = new Path("/task3/centroids");
 		DistributedCache.addCacheFile(dataFile.toUri(), conf);
  
-		int iteration = 1;
+		int iteration = 0;
 		int success = 1;
 		do 
 		{
