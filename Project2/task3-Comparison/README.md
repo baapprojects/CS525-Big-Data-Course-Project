@@ -7,7 +7,7 @@
 
 ###What to do next
 1. Make combiner more robust     
-2. Generate top 10 terms for each cluster -- Not so hard (in different MapReduce Job)  
+2. <del>Generate top 10 terms for each cluster -- Not so hard (in different MapReduce Job)</del>  
 3. <del>Run on more iterations</del>    
 4. Compare with Mahout with Pengfei's work  
 
@@ -32,6 +32,8 @@
  
 		CPU Time: 3670    
 
+3. The output of top 10 terms for each cluster is [here](https://github.com/zhouhao/CS525-Big-Data-Course-Project/blob/master/Project2/task3-Comparison/output/topTerm-10-MapReduce.txt)
+    
 **2). Mahout for the same task**    
 ![mahout_iterations](images/mahout_iterations.png)        
 ![mahout_iterations](images/mahout-cmd.png)   
