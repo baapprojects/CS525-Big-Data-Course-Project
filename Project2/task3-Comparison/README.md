@@ -10,8 +10,11 @@
 2. <del>Generate top 10 terms for each cluster -- Not so hard (in different MapReduce Job)</del>  
 3. <del>Run on more iterations</del>    
 4. <del>Compare with Mahout </del>  
+
 ###How it works    
 ![task 3](images/tweets.png)   
+
+
 ###Report
 **1). MapReduce**:    
 
