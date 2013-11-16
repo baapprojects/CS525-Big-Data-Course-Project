@@ -5,6 +5,13 @@
 
 
 **Broadcast k centroids to all map nodes**(`DistributedCache` is used here).    
+
+##How it works   
+
+1. Compile source and make it as `kmeansCluster.jar`    
+2. Run it with command: `hadoop jar kmeansCluster.jar iteration-numbers Threshold [Enable-detail-Cluster-info-dump]`, for example `hadoop jar kmeansCluster.jar 6 10 0` (0 means disable detail cluster info dump, other number or empty means it is enabled)     
+
+
 ##Input & Output
 1. **ClusterMapper**:     
 	a. input is a `point`   
