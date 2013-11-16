@@ -57,4 +57,4 @@ From above, we see that even we set the iteration time to 9, Mahout finished Clu
 I think the reason is that Mahout is professional at Recommendation (include clustering), which beats ours.    
 
  
-
+**Descriptors**: The output of top 10 terms for each cluster is [here](https://github.com/zhouhao/CS525-Big-Data-Course-Project/blob/master/Project2/task3-Comparison/output/MahoutTermsDump.txt)
