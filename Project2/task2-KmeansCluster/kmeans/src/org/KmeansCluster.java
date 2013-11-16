@@ -280,6 +280,20 @@ public class KmeansCluster extends Configured implements Tool
 		
 		MAXITERATIONS = Integer.parseInt(args[0]);
 		THRESHOLD = Double.parseDouble(args[1]);
+		boolean waitingForConverge = false;
+		if(MAXITERATIONS == 0)
+		{
+			waitingForConverge = true;
+		}
+		int enableClusterOutput = 1;
+		try
+		{
+			enableClusterOutput = Integer.parseInt(args[2]);
+		}
+		catch(Exception e)
+		{
+			enableClusterOutput = 1;
+		}
 		
 		// set the path for cache, which will be loaded in ClusterMapper
 		Path dataFile = new Path("/task2/initK");
@@ -291,25 +305,28 @@ public class KmeansCluster extends Configured implements Tool
 		{
 			success ^= ToolRunner.run(conf, new KmeansCluster(), args);
 			iteration++;
-		} while (success == 1 && (!stopIteration(conf)) && iteration < MAXITERATIONS ); // take care of the order, I make stopIteration() prior to iteration, because I must keep the initK always contain the lastest centroids after each iteration
+		} while (success == 1 && (!stopIteration(conf)) && (waitingForConverge || iteration < MAXITERATIONS) ); // take care of the order, I make stopIteration() prior to iteration, because I must keep the initK always contain the lastest centroids after each iteration
 		 
-		// for final output(just a mapper only task <centroid, point>)
-		Job job = new Job(conf);
-		job.setJarByClass(KmeansCluster.class);
-		
-		FileInputFormat.setInputPaths(job, "/task2/kmeans");
-		Path outDir = new Path("/task2/final");
-		fs.delete(outDir,true);
-		FileOutputFormat.setOutputPath(job, outDir);
-		 
-		job.setInputFormatClass(TextInputFormat.class);
-		job.setOutputFormatClass(TextOutputFormat.class);
-		job.setMapperClass(ClusterMapper.class);
-		job.setNumReduceTasks(0);
-		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(Text.class);
-		 
-		job.waitForCompletion(true);
+		if(enableClusterOutput > 0)
+		{
+			// for final output(just a mapper only task <centroid, point>)
+			Job job = new Job(conf);
+			job.setJarByClass(KmeansCluster.class);
+			
+			FileInputFormat.setInputPaths(job, "/task2/kmeans");
+			Path outDir = new Path("/task2/final");
+			fs.delete(outDir,true);
+			FileOutputFormat.setOutputPath(job, outDir);
+			 
+			job.setInputFormatClass(TextInputFormat.class);
+			job.setOutputFormatClass(TextOutputFormat.class);
+			job.setMapperClass(ClusterMapper.class);
+			job.setNumReduceTasks(0);
+			job.setOutputKeyClass(Text.class);
+			job.setOutputValueClass(Text.class);
+			 
+			job.waitForCompletion(true);
+		}
 		
 	}
 }
