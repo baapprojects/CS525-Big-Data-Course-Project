@@ -9,3 +9,5 @@ Find more information about this project here: http://web.cs.wpi.edu/~cs525/f13b
 ---- 2. How to calculate the distance between 2 tweet vectors : James      
 ---- 3. Implemented in Java code by Hao based on task 2, and get feedback from James after every modification    
 **Document**: Done by James (Hao provides some statistics)     
+
+[>>Click to download the final report for this project<<](Project2_Mahout.pdf)
