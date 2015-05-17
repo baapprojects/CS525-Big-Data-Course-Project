@@ -24,7 +24,9 @@ Output: Country Name and a count of one for each citizen.
 Reducer aggregates the counts for each country and outputs a single record for each country.
 Output: Country Name and total # of citizens having a page.
 **Task B Execution without using a Combiner:**
-<p style="background:#300a24; color:white">ubuntu@ubuntu-VirtualBox:~/wpi/cs525/Project1$ hadoop jar taskB.jar taskB /cs525/bigdata /cs525/bigtaskBout
+<pre>
+
+ubuntu@ubuntu-VirtualBox:~/wpi/cs525/Project1$ hadoop jar taskB.jar taskB /cs525/bigdata /cs525/bigtaskBout
 13/10/10 04:31:01 WARN mapred.JobClient: Use GenericOptionsParser for parsing the arguments. Applications should implement Tool for the same.
 13/10/10 04:31:01 INFO util.NativeCodeLoader: Loaded the native-hadoop library
 13/10/10 04:31:01 WARN snappy.LoadSnappy: Snappy native library not loaded
@@ -72,10 +74,11 @@ Output: Country Name and total # of citizens having a page.
 13/10/10 04:31:16 INFO mapred.JobClient:     <span style="background:#ffff99;color:#111">Reduce output records=242</span>
 13/10/10 04:31:16 INFO mapred.JobClient:     Virtual memory (bytes) snapshot=1891098624
 13/10/10 04:31:16 INFO mapred.JobClient:     Map output records=50000
-</p>
+</pre>
 This was an easy task of managing only 50000 records, so the very little CPU time (4590ms) was spent.
 **Task B Execution with a Combiner:**
-<p style="background:#300a24; color:white">ubuntu@ubuntu-VirtualBox:~/wpi/cs525/MapReduceQueries$ hadoop jar taskB.jar taskB /cs525/bigdata /cs525/bigtaskBout2
+<pre>
+ubuntu@ubuntu-VirtualBox:~/wpi/cs525/MapReduceQueries$ hadoop jar taskB.jar taskB /cs525/bigdata /cs525/bigtaskBout2
 13/10/10 14:52:27 WARN mapred.JobClient: Use GenericOptionsParser for parsing the arguments. Applications should implement Tool for the same.
 13/10/10 14:52:28 INFO util.NativeCodeLoader: Loaded the native-hadoop library
 13/10/10 14:52:28 WARN snappy.LoadSnappy: Snappy native library not loaded
@@ -122,7 +125,7 @@ This was an easy task of managing only 50000 records, so the very little CPU tim
 13/10/10 14:52:43 INFO mapred.JobClient:     Reduce output records=242
 13/10/10 14:52:43 INFO mapred.JobClient:     Virtual memory (bytes) snapshot=1885925376
 13/10/10 14:52:43 INFO mapred.JobClient:     Map output records=50000
-</p>
+</pre>
 The CPU time spent while using a combiner was even smaller of only 3270ms.
 **Discussion**:
 The interesting thing about this is that we could avoid the use of a separate reducer, because the size of the dataset was so small that only one mapper can easily handle that. So a mapper side reducer would be sufficient to produce the desired output. But, in general if the input dataset size is so huge and if a single mapper cannot handle that, we must use a reducer to aggregate the counts. Moreover, in hadoop if we specify to use a combiner, but do not specify a reducer, the combiner is never calls by the Hadoop system, with the assumption that combiner only helps reducers and if there is  no reducer there is no need to use combiner.
@@ -140,7 +143,8 @@ Aggregated the output of each mapper.
 **Reducer:**
 Aggregated the total access count for every page that was accessed. Sorted the aggregated counts. The reducer method did not produce any output. Instead, I used the cleanup() method of the reducer class to produce the top 10 pages with their access count.
 **Task C Execution without using a Combiner:**
-<p style="background:#300a24; color:white">ubuntu@ubuntu-VirtualBox:~/wpi/cs525/Project1$ hadoop jar taskC.jar taskC /cs525/bigdata /cs525/bigtaskCout
+<pre>
+ubuntu@ubuntu-VirtualBox:~/wpi/cs525/Project1$ hadoop jar taskC.jar taskC /cs525/bigdata /cs525/bigtaskCout
 13/10/10 04:36:20 WARN mapred.JobClient: Use GenericOptionsParser for parsing the arguments. Applications should implement Tool for the same.
 13/10/10 04:36:20 INFO input.FileInputFormat: Total input paths to process : 1
 13/10/10 04:36:20 INFO util.NativeCodeLoader: Loaded the native-hadoop library
@@ -203,10 +207,11 @@ Aggregated the total access count for every page that was accessed. Sorted the a
 13/10/10 04:38:07 INFO mapred.JobClient:     <span style="background:#ffff99;color:#111">Reduce output records=10</span>
 13/10/10 04:38:07 INFO mapred.JobClient:     Virtual memory (bytes) snapshot=5232447488
 13/10/10 04:38:07 INFO mapred.JobClient:     Map output records=10000000  
-</p>
+</pre>
 From the above screen we that 10 mappers were used. It took 42110 ms to produce output without using a combiner. The reducer produced 10 records which is certainly the top 10 pages with their counts.
 **Task C Execution with a Combiner:**
-<p style="background:#300a24; color:white">ubuntu@ubuntu-VirtualBox:~/wpi/cs525/MapReduceQueries$ hadoop jar taskC.jar taskC /cs525/bigdata /cs525/bigtaskCout2
+<pre>
+ubuntu@ubuntu-VirtualBox:~/wpi/cs525/MapReduceQueries$ hadoop jar taskC.jar taskC /cs525/bigdata /cs525/bigtaskCout2
 13/10/10 16:01:52 WARN mapred.JobClient: Use GenericOptionsParser for parsing the arguments. Applications should implement Tool for the same.
 13/10/10 16:01:52 INFO input.FileInputFormat: Total input paths to process : 1
 13/10/10 16:01:52 INFO util.NativeCodeLoader: Loaded the native-hadoop library
@@ -263,7 +268,7 @@ From the above screen we that 10 mappers were used. It took 42110 ms to produce 
 13/10/10 16:02:34 INFO mapred.JobClient:     Reduce output records=10
 13/10/10 16:02:34 INFO mapred.JobClient:     Virtual memory (bytes) snapshot=5239975936
 13/10/10 16:02:34 INFO mapred.JobClient:     Map output records=10000000  
-</p>
+</pre>
 **Discussion**:
 Using a combiner we can see that the time spent was 33650 ms, which is 20% less time than the time spent for the job without using a reducer.
 **Output File:**
@@ -319,7 +324,8 @@ For this task we needed 2 datasets. To process the two datasets we used two sepa
 Here is the logic to find the uninterested people: people whose initial access time and last access time differed only by the threshold number of days ( 10*24*60= 14400 minutes, assuming that each each access time unit is a minute). If the difference of last access time and first access time is within threshold time of 10 days and the difference between current time and last access time is greater than the threshold time of 10 days, then they used facebook only for the initial threshold period and never accessed again. The difference between current time and last access time is taken into consideration because we should not judge people who started using facebook in last 10 days.
 Reducer Output: MemberID, Member Name, first access time, last access time
 **Task G Execution:**
-<p style="background:#300a24; color:white">ubuntu@ubuntu-VirtualBox:~/wpi/cs525/Project1$ hadoop jar taskG.jar taskG  /cs525/bigdata /cs525/bigtaskGout
+<pre>
+ubuntu@ubuntu-VirtualBox:~/wpi/cs525/Project1$ hadoop jar taskG.jar taskG  /cs525/bigdata /cs525/bigtaskGout
 13/10/10 04:51:28 WARN mapred.JobClient: Use GenericOptionsParser for parsing the arguments. Applications should implement Tool for the same.
 13/10/10 04:51:28 INFO util.NativeCodeLoader: Loaded the native-hadoop library
 13/10/10 04:51:28 WARN snappy.LoadSnappy: Snappy native library not loaded
@@ -384,7 +390,7 @@ Reducer Output: MemberID, Member Name, first access time, last access time
 13/10/10 04:54:33 INFO mapred.JobClient:     <span style="background:#ffff99;color:#111">Reduce output records=0</span>
 13/10/10 04:54:33 INFO mapred.JobClient:     Virtual memory (bytes) snapshot=6597853184
 13/10/10 04:54:33 INFO mapred.JobClient:     Map output records=10050000
-</p>
+</pre>
 From the above statistics, we can see that the time spent for the job is 55840 ms. 11 mappers were used and 3 reducers were used. We did not use any combiner because we needed to find the max and min of the access time and we needed to join two different types of datasets. Here we can also see that the reducer did not produce any record, which is indicating that in our dataset there were no such users who lost interest. I have tested the work with several big datasets produced randomly. In every case for the big datasets, there was no output since in the larger datasets the map-reduce job did not find any user who has lost interest. So to check the code we produced a small dataset and hand edited some values so that some users must fall within the criteria that they used facebook only for a initial period of 10 days. That time my code produced correct result. So, I conclude that it can surely find the users who have lost interest.
 
 
@@ -428,7 +434,8 @@ For this task we needed 2 datasets. To process the two datasets we used two sepa
 The reduce function is calculating the total hits of a page and inserting the pageid and count in an associative array. Since we need total number of access to calculate the percentage of users in a particular country we are actually using country name as the key of the associative array and we are incrementing the value once for each unique user. The reducer does not output anything to the output file. Instead I used the cleanup method of the reducer class to output the country names and percent of users to the advertiser's page.
 Reducer output: Country Name and  Percent of Users from that country
 **Task H Execution:**
-<p style="background:#300a24; color:white">ubuntu@ubuntu-VirtualBox:~/wpi/cs525/Project1$ hadoop jar taskH.jar taskH  /cs525/bigdata /cs525/bigtaskHout 5555
+<pre>
+ubuntu@ubuntu-VirtualBox:~/wpi/cs525/Project1$ hadoop jar taskH.jar taskH  /cs525/bigdata /cs525/bigtaskHout 5555
 13/10/10 05:37:13 WARN mapred.JobClient: Use GenericOptionsParser for parsing the arguments. Applications should implement Tool for the same.
 13/10/10 05:37:13 INFO input.FileInputFormat: Total input paths to process : 1
 13/10/10 05:37:13 INFO util.NativeCodeLoader: Loaded the native-hadoop library
@@ -486,7 +493,7 @@ Reducer output: Country Name and  Percent of Users from that country
 13/10/10 05:37:43 INFO mapred.JobClient:     <span style="background:#ffff99;color:#111">Reduce output records=127</span>
 13/10/10 05:37:43 INFO mapred.JobClient:     Virtual memory (bytes) snapshot=5685473280
 13/10/10 05:37:43 INFO mapred.JobClient:     Map output records=50174
-</p>
+</pre>
 **Discussion:**
 From the above statistics, we can see that the time spent for the job is 21610 ms. 11 mappers were used and 1 reducer was used. In the program we explicitly specified to use one reducer because we needed to find  the total number of user in the whole world, and calculate the percent of users in a country using that total. The equation is (country-total x 100/world-total). We did not use any combiner because we needed to find the total count in the whole world and we needed to join two different types of datasets. Here we can also see that the reducer produced 127 record, which is indicating that the advertiser (ID 5555) has fans in 127 countries.
 **Output files:**
